@@ -188,7 +188,7 @@
     <div class="arow"><div class="row-label">İsmin</div>
       <input class="name-input" id="nameInput" placeholder="Örn. Tuğba" maxlength="20"></div>
   </div>
-  <button class="cta" id="go">C'est parti &rarr; Fransa'ya git</button>
+  <button class="cta" id="go">C'est parti →</button>
 </div>
 
 <!-- ============ HOTEL SCREEN (image) ============ -->
@@ -196,14 +196,14 @@
   <img class="bg" src="A2412E17-5B7A-48FD-B38C-0E5222822389.png" alt="otel odası">
   <div class="topbar">
     <div class="roomtag">Hôtel Le Marais &middot; Chambre 207</div>
-    <div class="hint">Bir yere dokun</div>
+    <div class="hint">Touchez quelque chose</div>
   </div>
   <!-- tappable zones positioned with % over the image -->
-  <div class="zone" id="zPencere" style="left:3%; top:18%; width:34%; height:42%;"><span class="ztag">Pencere · La fenêtre</span></div>
-  <div class="zone" id="zTelefon" style="left:55%; top:48%; width:22%; height:16%;"><span class="ztag">Telefon</span></div>
-  <div class="zone" id="zValiz"  style="left:70%; top:64%; width:28%; height:30%;"><span class="ztag">Valiz · Kıyafet</span></div>
+  <div class="zone" id="zPencere" style="left:3%; top:18%; width:34%; height:42%;"><span class="ztag">La fenêtre</span></div>
+  <div class="zone" id="zTelefon" style="left:55%; top:48%; width:22%; height:16%;"><span class="ztag">Le téléphone</span></div>
+  <div class="zone" id="zValiz"  style="left:70%; top:64%; width:28%; height:30%;"><span class="ztag">La valise</span></div>
   <div class="nav">
-    <button class="navbtn primary" id="zKapi">Kapıdan çık → Şehre</button>
+    <button class="navbtn primary" id="zKapi">Sortir → La ville</button>
   </div>
   <div class="overlay" id="ovHotel"><div class="card" id="cardHotel"></div></div>
 </div>
@@ -213,29 +213,28 @@
   <img class="bg" src="560A7C42-76C3-45DA-86F6-4FE25D59E5DA.png" alt="paris sokağı">
   <div class="topbar">
     <div class="roomtag" id="streetName">Rue de Rivoli</div>
-    <div class="hint">Bir dükkâna dokun</div>
+    <div class="hint">Touchez une boutique</div>
   </div>
   <!-- left = café (burgundy awning), right = boulangerie (golden) in this image -->
   <div class="zone" id="zKafe"  style="left:2%; top:42%; width:30%; height:40%;"><span class="ztag">☕ Café de Flore</span></div>
   <div class="zone" id="zFirin" style="left:64%; top:46%; width:34%; height:38%;"><span class="ztag">🥖 Boulangerie Margot</span></div>
-  <!-- middle distance: walk further -->
-  <div class="zone" id="zIleri" style="left:38%; top:30%; width:24%; height:26%;"><span class="ztag">↑ İleri yürü</span></div>
   <div class="nav">
-    <button class="navbtn" id="zOtele">← Otele dön</button>
+    <button class="navbtn" id="zOtele">← L'hôtel</button>
+    <button class="navbtn primary" id="zIleri">Continuer →</button>
   </div>
 </div>
 
 <!-- ============ STREET 2 (kitapçı + çiçekçi) ============ -->
 <div class="screen imgscene" id="street2Screen">
-  <img class="bg" src="560A7C42-76C3-45DA-86F6-4FE25D59E5DA.png" alt="paris sokağı 2">
+  <img class="bg" src="178A8E28-6167-439C-9FF4-5460BA1B7341.png" alt="paris sokağı 2">
   <div class="topbar">
     <div class="roomtag">Rue des Rosiers</div>
-    <div class="hint">Bir dükkâna dokun</div>
+    <div class="hint">Touchez une boutique</div>
   </div>
   <div class="zone" id="zKitapci" style="left:2%; top:42%; width:30%; height:40%;"><span class="ztag">📚 Librairie du Coin</span></div>
   <div class="zone" id="zCicekci" style="left:64%; top:46%; width:34%; height:38%;"><span class="ztag">🌸 Fleuriste Élise</span></div>
   <div class="nav">
-    <button class="navbtn" id="zGeri">← Geri</button>
+    <button class="navbtn" id="zGeri">← Retour</button>
   </div>
 </div>
 
@@ -244,11 +243,11 @@
   <img class="bg" id="venueBg" src="" alt="mekan">
   <div class="topbar">
     <div class="roomtag" id="venueName"></div>
-    <div class="hint">Karakter yakında</div>
+    <div class="hint">Personnage bientôt</div>
   </div>
   <div class="nav">
-    <button class="navbtn" id="venueBack">← Sokağa dön</button>
-    <button class="navbtn primary" id="venueTalk">Konuşmayı dene</button>
+    <button class="navbtn" id="venueBack">← La rue</button>
+    <button class="navbtn primary" id="venueTalk">Parler</button>
   </div>
   <div class="overlay" id="ovVenue"><div class="card" id="cardVenue"></div></div>
 </div>
@@ -340,7 +339,7 @@ function openHotel(key){ var d=hotelDialogs[key];
 }
 $('zPencere').addEventListener('click',function(){openHotel('pencere');});
 $('zTelefon').addEventListener('click',function(){openHotel('telefon');});
-$('zValiz').addEventListener('click',function(){ $('go').textContent='✓ Hazır → odaya dön'; show('avatarScreen'); });
+$('zValiz').addEventListener('click',function(){ $('go').textContent='✓ Retour à la chambre'; show('avatarScreen'); });
 $('zKapi').addEventListener('click',function(){show('streetScreen');});
 document.getElementById('ovHotel').addEventListener('click',function(e){ if(e.target.id==='ovHotel') document.getElementById('ovHotel').classList.remove('show'); });
 
