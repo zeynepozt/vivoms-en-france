@@ -65,6 +65,38 @@
   .btn:active { transform:scale(0.96); }
   .btn.primary { background:var(--rouge); color:#fff; border-color:var(--rouge); }
   .btn.primary:hover { background:#a4452f; }
+
+  /* ===== IMAGE SCENE SYSTEM ===== */
+  .imgscene { position:relative; width:100%; height:100vh; overflow:hidden; background:#000; }
+  .imgscene .bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .topbar { position:absolute; top:0; left:0; right:0; z-index:30; display:flex; justify-content:space-between; align-items:center; padding:14px 18px; background:linear-gradient(to bottom, rgba(0,0,0,0.32), transparent); }
+  .roomtag { font-family:'Fraunces',serif; color:#fff; font-size:16px; font-weight:600; text-shadow:0 1px 6px rgba(0,0,0,0.5); }
+  .hint { font-size:12px; color:#fff; opacity:0.9; background:rgba(0,0,0,0.3); padding:6px 12px; border-radius:999px; }
+  /* tappable hotspot zones over the image */
+  .zone { position:absolute; z-index:20; cursor:pointer; border-radius:16px; transition:background .2s, box-shadow .2s; display:flex; align-items:flex-end; justify-content:center; padding-bottom:8px; }
+  .zone:hover, .zone:active { background:rgba(255,233,168,0.18); box-shadow:0 0 0 2px rgba(255,233,168,0.6) inset; }
+  .zone .ztag { font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; color:#fff; background:rgba(43,39,34,0.85); padding:5px 12px; border-radius:999px; opacity:0; transition:opacity .2s; white-space:nowrap; }
+  .zone:hover .ztag, .zone:active .ztag { opacity:1; }
+  /* nav buttons */
+  .nav { position:absolute; bottom:26px; left:0; right:0; z-index:30; display:flex; justify-content:center; gap:12px; padding:0 20px; }
+  .navbtn { padding:13px 20px; border:2px solid #3A3530; border-radius:14px; font-family:'Fraunces',serif; font-size:15px; font-weight:600; cursor:pointer; background:#fff; color:#3A3530; box-shadow:3px 3px 0 #3A3530; transition:transform .1s, box-shadow .1s; }
+  .navbtn:active { transform:translate(2px,2px); box-shadow:1px 1px 0 #3A3530; }
+  .navbtn.primary { background:#B8553F; color:#fff; }
+  .navbtn:disabled { opacity:0.4; cursor:default; box-shadow:none; }
+  /* dialog overlay (shared) */
+  .overlay { position:absolute; inset:0; background:rgba(30,26,24,0.55); z-index:40; display:none; align-items:center; justify-content:center; padding:24px; backdrop-filter:blur(3px); }
+  .overlay.show { display:flex; }
+  .card { background:#F7F2EA; border:1.5px solid #C9A24B; border-radius:20px; max-width:380px; width:100%; padding:26px; box-shadow:0 20px 50px rgba(0,0,0,0.4); animation:pop .25s ease; }
+  @keyframes pop { from{transform:scale(0.92) translateY(8px);opacity:0;} to{transform:scale(1) translateY(0);opacity:1;} }
+  .card .eyebrow2 { font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:#B8553F; font-weight:600; margin-bottom:8px; }
+  .card h2 { font-family:'Fraunces',serif; font-size:23px; margin-bottom:6px; line-height:1.1; color:#3A3530; }
+  .card .fr { font-size:15px; color:#8A7E6E; font-style:italic; margin-bottom:14px; }
+  .card p { font-size:14px; line-height:1.55; margin-bottom:20px; color:#4a443c; }
+  .card .actions { display:flex; gap:10px; flex-wrap:wrap; }
+  .btn { padding:11px 18px; border:1.5px solid #3A3530; border-radius:12px; font-family:'DM Sans',sans-serif; font-weight:600; font-size:14px; cursor:pointer; background:#fff; color:#3A3530; transition:transform .1s, background .15s; }
+  .btn:active { transform:scale(0.96); }
+  .btn.primary { background:#B8553F; color:#fff; border-color:#B8553F; }
+  .soon { display:inline-block; font-size:11px; background:#C9A24B; color:#fff; padding:3px 8px; border-radius:999px; margin-left:6px; font-weight:600; }
 </style>
 </head>
 <body>
@@ -159,81 +191,66 @@
   <button class="cta" id="go">C'est parti &rarr; Fransa'ya git</button>
 </div>
 
-<!-- ============ HOTEL SCREEN ============ -->
-<div class="screen" id="hotelScreen">
+<!-- ============ HOTEL SCREEN (image) ============ -->
+<div class="screen imgscene" id="hotelScreen">
+  <img class="bg" src="A2412E17-5B7A-48FD-B38C-0E5222822389.png" alt="otel odası">
   <div class="topbar">
-    <div class="roomtag" id="roomtag">Hôtel Le Marais &middot; Chambre 207</div>
-    <div class="hint">Etrafı keşfet · bir şeye dokun</div>
+    <div class="roomtag">Hôtel Le Marais &middot; Chambre 207</div>
+    <div class="hint">Bir yere dokun</div>
   </div>
-  <svg class="room" viewBox="0 0 400 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EDE3D2"/><stop offset="1" stop-color="#E2D4BD"/></linearGradient>
-      <linearGradient id="rfloor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D8BE97"/><stop offset="1" stop-color="#C4A678"/></linearGradient>
-      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F6E7D8"/><stop offset="0.55" stop-color="#EBD3C4"/><stop offset="1" stop-color="#D9C2B8"/></linearGradient>
-      <radialGradient id="lampGlow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#FFE9B0" stop-opacity="0.85"/><stop offset="1" stop-color="#FFE9B0" stop-opacity="0"/></radialGradient>
-      <linearGradient id="curtain" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8DCC8"/><stop offset="1" stop-color="#D6C4A8"/></linearGradient>
-      <linearGradient id="bedspread" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C99B8A"/><stop offset="1" stop-color="#B8856F"/></linearGradient>
-    </defs>
-    <rect x="0" y="0" width="400" height="525" fill="url(#wall)"/>
-    <g fill="none" stroke="#D4C2A4" stroke-width="2" opacity="0.7"><rect x="30" y="120" width="120" height="250" rx="4"/></g>
-    <rect x="0" y="0" width="400" height="14" fill="#E8DCC6"/><rect x="0" y="14" width="400" height="3" fill="#D4C2A4"/>
-    <polygon points="0,525 400,525 400,700 0,700" fill="url(#rfloor)"/>
-    <g stroke="#B5996B" stroke-width="1.2" opacity="0.45">
-      <line x1="0" y1="565" x2="400" y2="565"/><line x1="0" y1="615" x2="400" y2="615"/><line x1="0" y1="668" x2="400" y2="668"/>
-      <line x1="80" y1="525" x2="80" y2="700"/><line x1="200" y1="525" x2="200" y2="700"/><line x1="320" y1="525" x2="320" y2="700"/></g>
-    <rect x="0" y="518" width="400" height="9" fill="#E0D0B4"/>
-    <g class="hotspot" id="hsWindow">
-      <ellipse class="glow" cx="200" cy="210" rx="140" ry="160" fill="url(#lampGlow)"/>
-      <rect x="100" y="78" width="200" height="262" rx="8" fill="#F3ECDF"/>
-      <rect x="108" y="86" width="184" height="246" rx="4" fill="#E4D4C0"/>
-      <rect x="114" y="92" width="172" height="234" rx="3" fill="url(#sky)"/>
-      <g fill="#C9AE97" opacity="0.55">
-        <rect x="120" y="270" width="26" height="56"/><polygon points="120,270 133,256 146,270"/>
-        <rect x="156" y="258" width="30" height="68"/><polygon points="156,258 171,242 186,258"/>
-        <rect x="220" y="266" width="24" height="60"/><rect x="252" y="252" width="30" height="74"/><polygon points="252,252 267,238 282,252"/></g>
-      <g stroke="#BBA188" stroke-width="2" fill="none" opacity="0.5"><path d="M196 250 L200 180 L204 250 M197.5 230 L202.5 230 M198.5 210 L201.5 210"/><circle cx="200" cy="179" r="2" fill="#BBA188"/></g>
-      <circle cx="160" cy="130" r="20" fill="#FCEFD2" opacity="0.7"/>
-      <line x1="200" y1="92" x2="200" y2="326" stroke="#F3ECDF" stroke-width="5"/>
-      <line x1="114" y1="209" x2="286" y2="209" stroke="#F3ECDF" stroke-width="5"/>
-      <path d="M100 78 Q82 200 96 340 L74 340 Q66 200 84 78 Z" fill="url(#curtain)"/>
-      <path d="M300 78 Q318 200 304 340 L326 340 Q334 200 316 78 Z" fill="url(#curtain)"/>
-      <ellipse cx="85" cy="220" rx="6" ry="10" fill="#C9A24B" opacity="0.8"/><ellipse cx="315" cy="220" rx="6" ry="10" fill="#C9A24B" opacity="0.8"/>
-      <g class="label-pin"><rect x="152" y="44" width="96" height="28" rx="14" fill="#3A3530"/><text x="200" y="63" text-anchor="middle" fill="#F7F2EA" font-family="DM Sans" font-size="13" font-weight="600">Pencere</text></g>
-    </g>
-    <g>
-      <rect x="18" y="398" width="158" height="48" rx="10" fill="#D8C8B0"/><rect x="24" y="404" width="146" height="36" rx="8" fill="#E4D8C2"/>
-      <rect x="18" y="438" width="158" height="40" rx="6" fill="#F1EADC"/>
-      <rect x="28" y="418" width="58" height="30" rx="8" fill="#fff"/><rect x="92" y="418" width="58" height="30" rx="8" fill="#fff"/>
-      <rect x="18" y="470" width="158" height="55" rx="6" fill="url(#bedspread)"/><rect x="18" y="470" width="158" height="14" fill="#C9A24B" opacity="0.45"/></g>
-    <g>
-      <rect x="188" y="452" width="68" height="73" rx="6" fill="#C9B391"/><rect x="194" y="470" width="56" height="3" fill="#B09A78"/>
-      <rect x="216" y="486" width="12" height="14" rx="2" fill="#C9A24B"/>
-      <ellipse cx="222" cy="424" rx="24" ry="13" fill="#F4DFA6"/><ellipse cx="222" cy="424" rx="24" ry="13" fill="none" stroke="#D9BE72" stroke-width="1"/>
-      <rect x="219" y="424" width="6" height="28" fill="#B09A78"/><ellipse cx="222" cy="452" rx="10" ry="3" fill="#C9A24B"/></g>
-    <g class="hotspot" id="hsPhone">
-      <circle class="glow" cx="226" cy="446" r="38" fill="url(#lampGlow)"/>
-      <rect x="212" y="436" width="28" height="18" rx="4" fill="#3A3530"/><rect x="216" y="439" width="20" height="12" rx="2" fill="#9CC2D0"/>
-      <g class="label-pin"><rect x="180" y="402" width="92" height="26" rx="13" fill="#3A3530"/><text x="226" y="420" text-anchor="middle" fill="#F7F2EA" font-family="DM Sans" font-size="12" font-weight="600">Telefon</text></g></g>
-    <g class="hotspot" id="hsSuitcase">
-      <ellipse class="glow" cx="316" cy="496" rx="60" ry="50" fill="url(#lampGlow)"/>
-      <rect x="272" y="468" width="88" height="57" rx="9" fill="#9FB0B5"/><rect x="272" y="490" width="88" height="6" fill="#86989E"/>
-      <rect x="306" y="460" width="20" height="12" rx="3" fill="#86989E"/>
-      <circle cx="287" cy="478" r="2.5" fill="#C9A24B"/><circle cx="345" cy="478" r="2.5" fill="#C9A24B"/>
-      <rect x="350" y="486" width="14" height="10" rx="2" fill="#C9A24B" opacity="0.8"/>
-      <g class="label-pin"><rect x="270" y="432" width="92" height="26" rx="13" fill="#3A3530"/><text x="316" y="450" text-anchor="middle" fill="#F7F2EA" font-family="DM Sans" font-size="12" font-weight="600">Valiz · Kıyafet</text></g></g>
-    <g class="hotspot" id="hsDoor">
-      <ellipse class="glow" cx="356" cy="350" rx="72" ry="130" fill="url(#lampGlow)"/>
-      <rect x="312" y="188" width="84" height="338" rx="5" fill="#E0D0B4"/><rect x="320" y="196" width="68" height="330" rx="3" fill="#EDE3D2"/>
-      <rect x="328" y="206" width="52" height="148" rx="3" fill="none" stroke="#D4C2A4" stroke-width="2.5"/>
-      <rect x="328" y="364" width="52" height="152" rx="3" fill="none" stroke="#D4C2A4" stroke-width="2.5"/>
-      <circle cx="332" cy="368" r="5" fill="#C9A24B"/><circle cx="332" cy="368" r="5" fill="none" stroke="#A8842F" stroke-width="1"/>
-      <rect x="340" y="214" width="28" height="14" rx="3" fill="#C9A24B" opacity="0.85"/>
-      <text x="354" y="225" text-anchor="middle" fill="#fff" font-family="Fraunces" font-size="10" font-weight="600">207</text>
-      <g class="label-pin"><rect x="316" y="150" width="78" height="26" rx="13" fill="#3A3530"/><text x="355" y="168" text-anchor="middle" fill="#F7F2EA" font-family="DM Sans" font-size="12" font-weight="600">Kapı</text></g></g>
-    <ellipse cx="155" cy="615" rx="125" ry="42" fill="#E0CBA8" opacity="0.55"/>
-    <ellipse cx="155" cy="615" rx="100" ry="32" fill="none" stroke="#C9A24B" stroke-width="1.5" opacity="0.4"/>
-  </svg>
-  <div class="overlay" id="ov"><div class="card" id="card"></div></div>
+  <!-- tappable zones positioned with % over the image -->
+  <div class="zone" id="zPencere" style="left:3%; top:18%; width:34%; height:42%;"><span class="ztag">Pencere · La fenêtre</span></div>
+  <div class="zone" id="zTelefon" style="left:55%; top:48%; width:22%; height:16%;"><span class="ztag">Telefon</span></div>
+  <div class="zone" id="zValiz"  style="left:70%; top:64%; width:28%; height:30%;"><span class="ztag">Valiz · Kıyafet</span></div>
+  <div class="nav">
+    <button class="navbtn primary" id="zKapi">Kapıdan çık → Şehre</button>
+  </div>
+  <div class="overlay" id="ovHotel"><div class="card" id="cardHotel"></div></div>
+</div>
+
+<!-- ============ STREET SCREEN (image) ============ -->
+<div class="screen imgscene" id="streetScreen">
+  <img class="bg" src="560A7C42-76C3-45DA-86F6-4FE25D59E5DA.png" alt="paris sokağı">
+  <div class="topbar">
+    <div class="roomtag" id="streetName">Rue de Rivoli</div>
+    <div class="hint">Bir dükkâna dokun</div>
+  </div>
+  <!-- left = café (burgundy awning), right = boulangerie (golden) in this image -->
+  <div class="zone" id="zKafe"  style="left:2%; top:42%; width:30%; height:40%;"><span class="ztag">☕ Café de Flore</span></div>
+  <div class="zone" id="zFirin" style="left:64%; top:46%; width:34%; height:38%;"><span class="ztag">🥖 Boulangerie Margot</span></div>
+  <!-- middle distance: walk further -->
+  <div class="zone" id="zIleri" style="left:38%; top:30%; width:24%; height:26%;"><span class="ztag">↑ İleri yürü</span></div>
+  <div class="nav">
+    <button class="navbtn" id="zOtele">← Otele dön</button>
+  </div>
+</div>
+
+<!-- ============ STREET 2 (kitapçı + çiçekçi) ============ -->
+<div class="screen imgscene" id="street2Screen">
+  <img class="bg" src="560A7C42-76C3-45DA-86F6-4FE25D59E5DA.png" alt="paris sokağı 2">
+  <div class="topbar">
+    <div class="roomtag">Rue des Rosiers</div>
+    <div class="hint">Bir dükkâna dokun</div>
+  </div>
+  <div class="zone" id="zKitapci" style="left:2%; top:42%; width:30%; height:40%;"><span class="ztag">📚 Librairie du Coin</span></div>
+  <div class="zone" id="zCicekci" style="left:64%; top:46%; width:34%; height:38%;"><span class="ztag">🌸 Fleuriste Élise</span></div>
+  <div class="nav">
+    <button class="navbtn" id="zGeri">← Geri</button>
+  </div>
+</div>
+
+<!-- ============ VENUE INTERIOR (shared, image swaps) ============ -->
+<div class="screen imgscene" id="venueScreen">
+  <img class="bg" id="venueBg" src="" alt="mekan">
+  <div class="topbar">
+    <div class="roomtag" id="venueName"></div>
+    <div class="hint">Karakter yakında</div>
+  </div>
+  <div class="nav">
+    <button class="navbtn" id="venueBack">← Sokağa dön</button>
+    <button class="navbtn primary" id="venueTalk">Konuşmayı dene</button>
+  </div>
+  <div class="overlay" id="ovVenue"><div class="card" id="cardVenue"></div></div>
 </div>
 
 <script>
@@ -303,37 +320,68 @@ $('hatOpt').addEventListener('click',e=>{ if(!e.target.dataset.h)return;
   setActive(e.currentTarget,e.target); });
 $('nameInput').addEventListener('input',()=>{ $('nameDisplay').textContent=$('nameInput').value?`« ${$('nameInput').value} »`:''; });
 
-/* ============ SCENE TRANSITION ============ */
-let cameFromHotel=false;
-function showAvatar(){ $('hotelScreen').classList.remove('active'); $('avatarScreen').classList.add('active'); window.scrollTo(0,0); }
-function showHotel(){ $('avatarScreen').classList.remove('active'); $('hotelScreen').classList.add('active'); window.scrollTo(0,0); }
-$('go').addEventListener('click',()=>{ showHotel(); });
+/* ============ SCENE NAVIGATION ============ */
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
 
-/* ============ HOTEL LOGIC ============ */
-const ov=$('ov'); const card=$('card');
-const dialogs={
-  window:{ ce:'La fenêtre · Pencere', title:'Paris uyanıyor', fr:'« Quelle belle vue ! »',
-    p:'Pencereden yumuşak sabah ışığı süzülüyor. Aşağıda dar bir sokak, çatıların arasından uzakta hafifçe Eiffel Kulesi. Şehir seni bekliyor.',
-    actions:[{t:'Biraz daha izle',cls:'btn'},{t:'Dışarı çıkmaya hazırım →',cls:'btn primary'}] },
-  phone:{ ce:'Le téléphone · Telefon', title:'Bir mesajın var', fr:'« Bienvenue à Paris ! »',
-    p:'Otelden karşılama: "Bienvenue ! Kahvaltı 7-10 arası, zemin katta." Tam anlamadıysan sorun değil — yavaş yavaş alışacaksın.',
-    actions:[{t:'Kapat',cls:'btn'}] },
-  door:{ ce:'La porte · Kapı', title:'Şehre çıkalım mı?', fr:'« On y va ? »',
-    p:'Kapının ardında Paris sokakları var. Hazırsan çık — istediğin yere gidebilir, istediğinle konuşabilirsin. Acele yok.',
-    actions:[{t:'Henüz değil',cls:'btn'},{t:'Şehre çık →',cls:'btn primary'}] }
+/* avatar "go" button -> hotel */
+$('go').addEventListener('click',function(){ show('hotelScreen'); });
+
+/* ---- HOTEL zones ---- */
+var hotelDialogs={
+  pencere:{ e:'La fenêtre · Pencere', t:'Paris uyanıyor', fr:'« Quelle belle vue ! »',
+    p:'Pencereden yumuşak sabah ışığı süzülüyor. Aşağıda Paris çatıları, uzakta şehir. İçin kıpır kıpır.' },
+  telefon:{ e:'Le téléphone · Telefon', t:'Bir mesajın var', fr:'« Bienvenue à Paris ! »',
+    p:'Otelden karşılama: "Bienvenue ! Kahvaltı 7-10 arası, zemin katta." Tam anlamadıysan sorun değil — yavaş yavaş alışacaksın.' }
 };
-function openD(key){ const d=dialogs[key];
-  let btns=d.actions.map(a=>`<button class="${a.cls}">${a.t}</button>`).join('');
-  card.innerHTML=`<div class="ceyebrow">${d.ce}</div><h2>${d.title}</h2><div class="fr">${d.fr}</div><p>${d.p}</p><div class="actions">${btns}</div>`;
-  ov.classList.add('show');
-  card.querySelectorAll('.btn').forEach(b=>b.addEventListener('click',()=>ov.classList.remove('show'))); }
-$('hsWindow').addEventListener('click',()=>openD('window'));
-$('hsPhone').addEventListener('click',()=>openD('phone'));
-$('hsDoor').addEventListener('click',()=>openD('door'));
-$('hsSuitcase').addEventListener('click',()=>{ cameFromHotel=true; $('go').textContent='✓ Hazır → odaya dön'; showAvatar(); });
-ov.addEventListener('click',e=>{ if(e.target===ov) ov.classList.remove('show'); });
+function openHotel(key){ var d=hotelDialogs[key];
+  document.getElementById('cardHotel').innerHTML='<div class="eyebrow2">'+d.e+'</div><h2>'+d.t+'</h2><div class="fr">'+d.fr+'</div><p>'+d.p+'</p><div class="actions"><button class="btn primary" id="hOk">Tamam</button></div>';
+  document.getElementById('ovHotel').classList.add('show');
+  document.getElementById('hOk').addEventListener('click',function(){document.getElementById('ovHotel').classList.remove('show');});
+}
+$('zPencere').addEventListener('click',function(){openHotel('pencere');});
+$('zTelefon').addEventListener('click',function(){openHotel('telefon');});
+$('zValiz').addEventListener('click',function(){ $('go').textContent='✓ Hazır → odaya dön'; show('avatarScreen'); });
+$('zKapi').addEventListener('click',function(){show('streetScreen');});
+document.getElementById('ovHotel').addEventListener('click',function(e){ if(e.target.id==='ovHotel') document.getElementById('ovHotel').classList.remove('show'); });
 
-/* init */
+/* ---- STREET navigation ---- */
+$('zOtele').addEventListener('click',function(){show('hotelScreen');});
+$('zIleri').addEventListener('click',function(){show('street2Screen');});
+$('zGeri').addEventListener('click',function(){show('streetScreen');});
+
+/* ---- VENUE (interior) ---- */
+var venues={
+  kafe:{ img:'F6328401-ADB4-419B-89E8-84F1467202C0.png', name:'Café de Flore', e:'Le café · Kafe', fr:'« Un café, s\u2019il vous plaît »',
+    p:'Sıcacık bir kafe. Garson Julien birazdan seninle konuşacak — kahveni alabilir, hava durumundan sohbet edebilir.' },
+  firin:{ img:'5A0EA8A0-E10D-4395-943F-BA555A1E8CED.png', name:'Boulangerie Margot', e:'La boulangerie · Fırın', fr:'« Une baguette ! »',
+    p:'Taze ekmek kokusu. Fırıncı Margot güler yüzlü — baget, kruvasan, pain au chocolat sipariş edebilirsin.' },
+  kitapci:{ img:'D62FC151-9AD5-4796-920C-4CFD3C33FA17.png', name:'Librairie du Coin', e:'La librairie · Kitapçı', fr:'« Vous cherchez un livre ? »',
+    p:'Tavana kadar kitap dolu sıcak bir dükkân. Sahibi sana bir kitap önerebilir.' },
+  cicekci:{ img:'E17C68D2-05C5-462D-A98D-8D0677FD9C22.png', name:'Fleuriste Élise', e:'Le fleuriste · Çiçekçi', fr:'« Elles sont belles, non ? »',
+    p:'Rengârenk çiçekler. Élise sana buket hazırlayabilir, hangi çiçeği sevdiğini sorabilir.' }
+};
+var currentVenue=null, venueFrom='streetScreen';
+function openVenue(key, from){
+  currentVenue=key; venueFrom=from;
+  var v=venues[key];
+  document.getElementById('venueBg').src=v.img;
+  document.getElementById('venueName').textContent=v.name;
+  show('venueScreen');
+}
+$('zKafe').addEventListener('click',function(){openVenue('kafe','streetScreen');});
+$('zFirin').addEventListener('click',function(){openVenue('firin','streetScreen');});
+$('zKitapci').addEventListener('click',function(){openVenue('kitapci','street2Screen');});
+$('zCicekci').addEventListener('click',function(){openVenue('cicekci','street2Screen');});
+$('venueBack').addEventListener('click',function(){show(venueFrom);});
+$('venueTalk').addEventListener('click',function(){
+  var v=venues[currentVenue];
+  document.getElementById('cardVenue').innerHTML='<div class="eyebrow2">'+v.e+'</div><h2>'+v.name+' <span class="soon">AI yakında</span></h2><div class="fr">'+v.fr+'</div><p>'+v.p+'</p><p style="color:#8A7E6E;">Buraya birazdan karakteri ve gerçek Fransızca sohbeti ekleyeceğiz. 🇫🇷</p><div class="actions"><button class="btn primary" id="vOk">Tamam</button></div>';
+  document.getElementById('ovVenue').classList.add('show');
+  document.getElementById('vOk').addEventListener('click',function(){document.getElementById('ovVenue').classList.remove('show');});
+});
+document.getElementById('ovVenue').addEventListener('click',function(e){ if(e.target.id==='ovVenue') document.getElementById('ovVenue').classList.remove('show'); });
+
+/* init avatar render */
 renderHair(); renderClothing(); renderBrows(); renderMouth();
 </script>
 </body>
