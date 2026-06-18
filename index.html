@@ -3,21 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Crée ton personnage</title>
+<title>Vivons en France</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600&display=swap');
-  :root { --paper:#F5EFE6; --ink:#2B2722; --rouge:#C4452F; --bleu:#2E5A6B; --gold:#D9A441; --soft:#EAE1D2; --line:#D8CCB8; }
+  :root { --paper:#F7F2EA; --ink:#3A3530; --rouge:#B8553F; --bleu:#5B7C8A; --gold:#C9A24B; --soft:#EAE1D2; --line:#D8CCB8; }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'DM Sans',sans-serif; background:var(--paper); color:var(--ink); min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:24px 16px 48px; background-image:radial-gradient(circle at 1px 1px, rgba(43,39,34,0.04) 1px, transparent 0); background-size:22px 22px; }
+  html,body { height:100%; }
+  body { font-family:'DM Sans',sans-serif; background:var(--paper); color:var(--ink); }
+
+  /* ---- SCENE SYSTEM ---- */
+  .screen { display:none; }
+  .screen.active { display:block; }
+
+  /* ===== AVATAR SCREEN ===== */
+  #avatarScreen { min-height:100vh; display:none; flex-direction:column; align-items:center; padding:24px 16px 48px; background:var(--paper); background-image:radial-gradient(circle at 1px 1px, rgba(58,53,48,0.04) 1px, transparent 0); background-size:22px 22px; }
+  #avatarScreen.active { display:flex; }
   .eyebrow { font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:var(--rouge); font-weight:600; margin-bottom:6px; }
   h1 { font-family:'Fraunces',serif; font-size:34px; font-weight:600; line-height:1.05; text-align:center; margin-bottom:4px; }
-  .sub { font-size:14px; color:#6F665A; text-align:center; margin-bottom:22px; max-width:330px; }
-  .stage { width:210px; height:210px; border-radius:50%; background:radial-gradient(circle at 50% 35%, #FBF6EC, #E6DAC6); border:3px solid var(--ink); position:relative; overflow:hidden; margin-bottom:8px; box-shadow:6px 6px 0 rgba(43,39,34,0.12); }
+  .sub { font-size:14px; color:#8A7E6E; text-align:center; margin-bottom:22px; max-width:330px; }
+  .stage { width:210px; height:210px; border-radius:50%; background:radial-gradient(circle at 50% 35%, #FBF6EC, #E6DAC6); border:3px solid var(--ink); position:relative; overflow:hidden; margin-bottom:8px; box-shadow:6px 6px 0 rgba(58,53,48,0.12); }
   .stage svg { width:100%; height:100%; display:block; }
   .avatar-name { font-family:'Fraunces',serif; font-size:20px; margin-bottom:20px; min-height:26px; }
-  .panel { width:100%; max-width:400px; background:#fff; border:2px solid var(--ink); border-radius:18px; padding:18px; box-shadow:5px 5px 0 rgba(43,39,34,0.1); }
-  .row { margin-bottom:18px; } .row:last-child { margin-bottom:0; }
-  .row-label { font-size:12px; letter-spacing:0.12em; text-transform:uppercase; font-weight:600; color:#8A8073; margin-bottom:8px; }
+  .panel { width:100%; max-width:400px; background:#fff; border:2px solid var(--ink); border-radius:18px; padding:18px; box-shadow:5px 5px 0 rgba(58,53,48,0.1); }
+  .arow { margin-bottom:18px; } .arow:last-child { margin-bottom:0; }
+  .row-label { font-size:12px; letter-spacing:0.12em; text-transform:uppercase; font-weight:600; color:#9A8E7E; margin-bottom:8px; }
   .swatches { display:flex; gap:8px; flex-wrap:wrap; }
   .swatch { width:36px; height:36px; border-radius:10px; border:2px solid var(--line); cursor:pointer; transition:transform .12s, border-color .12s; }
   .swatch:hover { transform:translateY(-2px); }
@@ -31,72 +40,76 @@
   .cta { width:100%; max-width:400px; margin-top:20px; padding:15px; background:var(--rouge); color:#fff; border:2px solid var(--ink); border-radius:14px; font-family:'Fraunces',serif; font-size:17px; font-weight:600; cursor:pointer; box-shadow:4px 4px 0 var(--ink); transition:transform .1s, box-shadow .1s; }
   .cta:hover { transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--ink); }
   .cta:active { transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink); }
-  .note { font-size:12px; color:#8A8073; text-align:center; margin-top:14px; max-width:380px; }
+
+  /* ===== HOTEL SCREEN ===== */
+  #hotelScreen { position:relative; width:100%; height:100vh; overflow:hidden; background:#2a2630; }
+  .topbar { position:absolute; top:0; left:0; right:0; z-index:30; display:flex; justify-content:space-between; align-items:center; padding:14px 18px; background:linear-gradient(to bottom, rgba(0,0,0,0.28), transparent); }
+  .roomtag { font-family:'Fraunces',serif; color:#fff; font-size:15px; letter-spacing:0.04em; opacity:0.92; text-shadow:0 1px 4px rgba(0,0,0,0.3); }
+  .hint { font-size:12px; color:#fff; opacity:0.85; background:rgba(0,0,0,0.22); padding:6px 12px; border-radius:999px; }
+  svg.room { width:100%; height:100%; display:block; }
+  .hotspot { cursor:pointer; }
+  .glow { opacity:0; transition:opacity .3s; }
+  .hotspot:hover .glow { opacity:1; }
+  .label-pin { opacity:0; transition:opacity .2s; pointer-events:none; }
+  .hotspot:hover .label-pin { opacity:1; }
+  .overlay { position:absolute; inset:0; background:rgba(30,26,24,0.5); z-index:40; display:none; align-items:center; justify-content:center; padding:24px; backdrop-filter:blur(3px); }
+  .overlay.show { display:flex; }
+  .card { background:var(--paper); border:1.5px solid var(--gold); border-radius:20px; max-width:380px; width:100%; padding:26px; box-shadow:0 20px 50px rgba(0,0,0,0.35); animation:pop .25s ease; }
+  @keyframes pop { from{transform:scale(0.92) translateY(8px);opacity:0;} to{transform:scale(1) translateY(0);opacity:1;} }
+  .card .ceyebrow { font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--rouge); font-weight:600; margin-bottom:8px; }
+  .card h2 { font-family:'Fraunces',serif; font-size:24px; margin-bottom:6px; line-height:1.1; }
+  .card .fr { font-size:15px; color:#8A7E6E; font-style:italic; margin-bottom:14px; }
+  .card p { font-size:14px; line-height:1.55; margin-bottom:20px; color:#4a443c; }
+  .card .actions { display:flex; gap:10px; flex-wrap:wrap; }
+  .btn { padding:11px 18px; border:1.5px solid var(--ink); border-radius:12px; font-family:'DM Sans',sans-serif; font-weight:600; font-size:14px; cursor:pointer; background:#fff; transition:transform .1s, background .15s; }
+  .btn:active { transform:scale(0.96); }
+  .btn.primary { background:var(--rouge); color:#fff; border-color:var(--rouge); }
+  .btn.primary:hover { background:#a4452f; }
 </style>
 </head>
 <body>
+
+<!-- ============ AVATAR SCREEN ============ -->
+<div class="screen active" id="avatarScreen">
   <div class="eyebrow">Bienvenue &middot; Adım 1</div>
   <h1>Crée ton personnage</h1>
-  <p class="sub">Bu sürüm tamamen çevrimdışı çalışır — internet gerekmez, uygulamada da açılır.</p>
+  <p class="sub">Fransa'daki maceran için kendi avatarını oluştur.</p>
 
   <div class="stage">
     <svg viewBox="0 0 240 240" id="avatar" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <clipPath id="faceClip"><ellipse cx="120" cy="120" rx="70" ry="76"/></clipPath>
-      </defs>
-      <!-- BACK HAIR -->
+      <defs><clipPath id="faceClip"><ellipse cx="120" cy="120" rx="70" ry="76"/></clipPath></defs>
       <path id="hairBack" d="" />
-      <!-- NECK -->
       <path d="M104 178 Q104 200 120 200 Q136 200 136 178 L136 165 L104 165 Z" fill="#E6B98E" id="neck"/>
-      <!-- CLOTHING -->
       <g id="clothing"></g>
-      <!-- EARS -->
       <ellipse cx="52" cy="128" rx="9" ry="13" fill="#E6B98E" id="earL"/>
       <ellipse cx="188" cy="128" rx="9" ry="13" fill="#E6B98E" id="earR"/>
-      <!-- EARRINGS -->
-      <g id="earrings" style="display:none">
-        <circle cx="52" cy="142" r="5" fill="#D9A441"/>
-        <circle cx="188" cy="142" r="5" fill="#D9A441"/>
-      </g>
-      <!-- FACE -->
+      <g id="earrings" style="display:none"><circle cx="52" cy="142" r="5" fill="#D9A441"/><circle cx="188" cy="142" r="5" fill="#D9A441"/></g>
       <ellipse id="head" cx="120" cy="120" rx="70" ry="76" fill="#F2D3B1"/>
-      <!-- CHEEKS -->
       <ellipse cx="80" cy="138" rx="13" ry="8" fill="#E8917F" opacity="0.35"/>
       <ellipse cx="160" cy="138" rx="13" ry="8" fill="#E8917F" opacity="0.35"/>
-      <!-- EYEBROWS -->
       <g id="brows" fill="none" stroke="#5A3A26" stroke-width="3.5" stroke-linecap="round"></g>
-      <!-- EYES -->
       <g id="eyes">
-        <ellipse cx="95" cy="115" rx="8" ry="10" fill="#fff"/>
-        <ellipse cx="145" cy="115" rx="8" ry="10" fill="#fff"/>
-        <circle cx="96" cy="116" r="5.5" fill="#4A3520"/>
-        <circle cx="146" cy="116" r="5.5" fill="#4A3520"/>
-        <circle cx="98" cy="113" r="2" fill="#fff"/>
-        <circle cx="148" cy="113" r="2" fill="#fff"/>
+        <ellipse cx="95" cy="115" rx="8" ry="10" fill="#fff"/><ellipse cx="145" cy="115" rx="8" ry="10" fill="#fff"/>
+        <circle cx="96" cy="116" r="5.5" fill="#4A3520"/><circle cx="146" cy="116" r="5.5" fill="#4A3520"/>
+        <circle cx="98" cy="113" r="2" fill="#fff"/><circle cx="148" cy="113" r="2" fill="#fff"/>
       </g>
-      <!-- GLASSES -->
       <g id="glasses" style="display:none" fill="none" stroke="#2B2722" stroke-width="3.5"></g>
-      <!-- NOSE -->
       <path d="M118 128 Q114 138 120 140" fill="none" stroke="#C99A74" stroke-width="2.5" stroke-linecap="round"/>
-      <!-- MOUTH -->
       <g id="mouth"></g>
-      <!-- FRONT HAIR -->
       <path id="hairFront" d="" />
-      <!-- HAT -->
       <g id="hat" style="display:none"></g>
     </svg>
   </div>
   <div class="avatar-name" id="nameDisplay"></div>
 
   <div class="panel">
-    <div class="row"><div class="row-label">Ten rengi</div><div class="swatches" id="skin">
+    <div class="arow"><div class="row-label">Ten rengi</div><div class="swatches" id="skin">
       <div class="swatch active" style="background:#F2D3B1" data-c="#F2D3B1" data-e="#E6B98E"></div>
       <div class="swatch" style="background:#ECAD80" data-c="#ECAD80" data-e="#DDA070"></div>
       <div class="swatch" style="background:#C68642" data-c="#C68642" data-e="#B5763A"></div>
       <div class="swatch" style="background:#9E5622" data-c="#9E5622" data-e="#8C4A1E"></div>
       <div class="swatch" style="background:#6B4226" data-c="#6B4226" data-e="#5C381F"></div></div></div>
-
-    <div class="row"><div class="row-label">Saç rengi</div><div class="swatches" id="hairColor">
+    <div class="arow"><div class="row-label">Saç rengi</div><div class="swatches" id="hairColor">
       <div class="swatch active" style="background:#2c1b18" data-c="#2c1b18"></div>
       <div class="swatch" style="background:#0e0e0e" data-c="#0e0e0e"></div>
       <div class="swatch" style="background:#724133" data-c="#724133"></div>
@@ -104,8 +117,7 @@
       <div class="swatch" style="background:#d6b370" data-c="#d6b370"></div>
       <div class="swatch" style="background:#b0413e" data-c="#b0413e"></div>
       <div class="swatch" style="background:#c97fb3" data-c="#c97fb3"></div></div></div>
-
-    <div class="row"><div class="row-label">Saç stili</div><div class="opt-row" id="hairStyle">
+    <div class="arow"><div class="row-label">Saç stili</div><div class="opt-row" id="hairStyle">
       <button class="opt active" data-s="long">Uzun düz</button>
       <button class="opt" data-s="wavy">Dalgalı</button>
       <button class="opt" data-s="pony">At kuyruğu</button>
@@ -113,191 +125,216 @@
       <button class="opt" data-s="bob">Bob</button>
       <button class="opt" data-s="short">Kısa</button>
       <button class="opt" data-s="curly">Kıvırcık</button></div></div>
-
-    <div class="row"><div class="row-label">Kıyafet</div><div class="opt-row" id="clothType">
+    <div class="arow"><div class="row-label">Kıyafet</div><div class="opt-row" id="clothType">
       <button class="opt active" data-t="tshirt">Tişört</button>
       <button class="opt" data-t="marin">Marinière</button>
       <button class="opt" data-t="blazer">Blazer</button>
       <button class="opt" data-t="trench">Trençkot</button>
       <button class="opt" data-t="dress">Elbise</button></div></div>
-
-    <div class="row"><div class="row-label">Kıyafet rengi</div><div class="swatches" id="clothColor">
+    <div class="arow"><div class="row-label">Kıyafet rengi</div><div class="swatches" id="clothColor">
       <div class="swatch active" style="background:#2E5A6B" data-c="#2E5A6B"></div>
       <div class="swatch" style="background:#C4452F" data-c="#C4452F"></div>
       <div class="swatch" style="background:#D9A441" data-c="#D9A441"></div>
       <div class="swatch" style="background:#4A7C59" data-c="#4A7C59"></div>
       <div class="swatch" style="background:#2B2722" data-c="#2B2722"></div>
       <div class="swatch" style="background:#C97FB3" data-c="#C97FB3"></div></div></div>
-
-    <div class="row"><div class="row-label">Ruj</div><div class="swatches" id="lipColor">
+    <div class="arow"><div class="row-label">Ruj</div><div class="swatches" id="lipColor">
       <div class="swatch active" style="background:#C4604F" data-c="#C4604F"></div>
       <div class="swatch" style="background:#A83232" data-c="#A83232"></div>
       <div class="swatch" style="background:#D16B7C" data-c="#D16B7C"></div>
       <div class="swatch" style="background:#8C4A3A" data-c="#8C4A3A"></div></div></div>
-
-    <div class="row"><div class="row-label">Gözlük</div><div class="opt-row" id="glassesOpt">
+    <div class="arow"><div class="row-label">Gözlük</div><div class="opt-row" id="glassesOpt">
       <button class="opt active" data-g="off">Yok</button>
       <button class="opt" data-g="round">Yuvarlak</button>
       <button class="opt" data-g="square">Kare</button></div></div>
-
-    <div class="row"><div class="row-label">Küpe</div><div class="opt-row" id="earOpt">
+    <div class="arow"><div class="row-label">Küpe</div><div class="opt-row" id="earOpt">
       <button class="opt active" data-e="off">Yok</button>
       <button class="opt" data-e="on">Var</button></div></div>
-
-    <div class="row"><div class="row-label">Şapka / Bere</div><div class="opt-row" id="hatOpt">
+    <div class="arow"><div class="row-label">Şapka / Bere</div><div class="opt-row" id="hatOpt">
       <button class="opt active" data-h="off">Yok</button>
       <button class="opt" data-h="beret">Bere</button></div></div>
-
-    <div class="row"><div class="row-label">İsmin</div>
+    <div class="arow"><div class="row-label">İsmin</div>
       <input class="name-input" id="nameInput" placeholder="Örn. Tuğba" maxlength="20"></div>
   </div>
-
   <button class="cta" id="go">C'est parti &rarr; Fransa'ya git</button>
-  <p class="note">Bu sürüm tamamen kendi içinde çizilir — sunucu, internet, harici görsel yok. Senin "tek dosya" tercihinle uyumlu.</p>
+</div>
+
+<!-- ============ HOTEL SCREEN ============ -->
+<div class="screen" id="hotelScreen">
+  <div class="topbar">
+    <div class="roomtag" id="roomtag">Hôtel Le Marais &middot; Chambre 207</div>
+    <div class="hint">Etrafı keşfet · bir şeye dokun</div>
+  </div>
+  <svg class="room" viewBox="0 0 400 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EDE3D2"/><stop offset="1" stop-color="#E2D4BD"/></linearGradient>
+      <linearGradient id="rfloor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D8BE97"/><stop offset="1" stop-color="#C4A678"/></linearGradient>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F6E7D8"/><stop offset="0.55" stop-color="#EBD3C4"/><stop offset="1" stop-color="#D9C2B8"/></linearGradient>
+      <radialGradient id="lampGlow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#FFE9B0" stop-opacity="0.85"/><stop offset="1" stop-color="#FFE9B0" stop-opacity="0"/></radialGradient>
+      <linearGradient id="curtain" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8DCC8"/><stop offset="1" stop-color="#D6C4A8"/></linearGradient>
+      <linearGradient id="bedspread" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C99B8A"/><stop offset="1" stop-color="#B8856F"/></linearGradient>
+    </defs>
+    <rect x="0" y="0" width="400" height="525" fill="url(#wall)"/>
+    <g fill="none" stroke="#D4C2A4" stroke-width="2" opacity="0.7"><rect x="30" y="120" width="120" height="250" rx="4"/></g>
+    <rect x="0" y="0" width="400" height="14" fill="#E8DCC6"/><rect x="0" y="14" width="400" height="3" fill="#D4C2A4"/>
+    <polygon points="0,525 400,525 400,700 0,700" fill="url(#rfloor)"/>
+    <g stroke="#B5996B" stroke-width="1.2" opacity="0.45">
+      <line x1="0" y1="565" x2="400" y2="565"/><line x1="0" y1="615" x2="400" y2="615"/><line x1="0" y1="668" x2="400" y2="668"/>
+      <line x1="80" y1="525" x2="80" y2="700"/><line x1="200" y1="525" x2="200" y2="700"/><line x1="320" y1="525" x2="320" y2="700"/></g>
+    <rect x="0" y="518" width="400" height="9" fill="#E0D0B4"/>
+    <g class="hotspot" id="hsWindow">
+      <ellipse class="glow" cx="200" cy="210" rx="140" ry="160" fill="url(#lampGlow)"/>
+      <rect x="100" y="78" width="200" height="262" rx="8" fill="#F3ECDF"/>
+      <rect x="108" y="86" width="184" height="246" rx="4" fill="#E4D4C0"/>
+      <rect x="114" y="92" width="172" height="234" rx="3" fill="url(#sky)"/>
+      <g fill="#C9AE97" opacity="0.55">
+        <rect x="120" y="270" width="26" height="56"/><polygon points="120,270 133,256 146,270"/>
+        <rect x="156" y="258" width="30" height="68"/><polygon points="156,258 171,242 186,258"/>
+        <rect x="220" y="266" width="24" height="60"/><rect x="252" y="252" width="30" height="74"/><polygon points="252,252 267,238 282,252"/></g>
+      <g stroke="#BBA188" stroke-width="2" fill="none" opacity="0.5"><path d="M196 250 L200 180 L204 250 M197.5 230 L202.5 230 M198.5 210 L201.5 210"/><circle cx="200" cy="179" r="2" fill="#BBA188"/></g>
+      <circle cx="160" cy="130" r="20" fill="#FCEFD2" opacity="0.7"/>
+      <line x1="200" y1="92" x2="200" y2="326" stroke="#F3ECDF" stroke-width="5"/>
+      <line x1="114" y1="209" x2="286" y2="209" stroke="#F3ECDF" stroke-width="5"/>
+      <path d="M100 78 Q82 200 96 340 L74 340 Q66 200 84 78 Z" fill="url(#curtain)"/>
+      <path d="M300 78 Q318 200 304 340 L326 340 Q334 200 316 78 Z" fill="url(#curtain)"/>
+      <ellipse cx="85" cy="220" rx="6" ry="10" fill="#C9A24B" opacity="0.8"/><ellipse cx="315" cy="220" rx="6" ry="10" fill="#C9A24B" opacity="0.8"/>
+      <g class="label-pin"><rect x="152" y="44" width="96" height="28" rx="14" fill="#3A3530"/><text x="200" y="63" text-anchor="middle" fill="#F7F2EA" font-family="DM Sans" font-size="13" font-weight="600">Pencere</text></g>
+    </g>
+    <g>
+      <rect x="18" y="398" width="158" height="48" rx="10" fill="#D8C8B0"/><rect x="24" y="404" width="146" height="36" rx="8" fill="#E4D8C2"/>
+      <rect x="18" y="438" width="158" height="40" rx="6" fill="#F1EADC"/>
+      <rect x="28" y="418" width="58" height="30" rx="8" fill="#fff"/><rect x="92" y="418" width="58" height="30" rx="8" fill="#fff"/>
+      <rect x="18" y="470" width="158" height="55" rx="6" fill="url(#bedspread)"/><rect x="18" y="470" width="158" height="14" fill="#C9A24B" opacity="0.45"/></g>
+    <g>
+      <rect x="188" y="452" width="68" height="73" rx="6" fill="#C9B391"/><rect x="194" y="470" width="56" height="3" fill="#B09A78"/>
+      <rect x="216" y="486" width="12" height="14" rx="2" fill="#C9A24B"/>
+      <ellipse cx="222" cy="424" rx="24" ry="13" fill="#F4DFA6"/><ellipse cx="222" cy="424" rx="24" ry="13" fill="none" stroke="#D9BE72" stroke-width="1"/>
+      <rect x="219" y="424" width="6" height="28" fill="#B09A78"/><ellipse cx="222" cy="452" rx="10" ry="3" fill="#C9A24B"/></g>
+    <g class="hotspot" id="hsPhone">
+      <circle class="glow" cx="226" cy="446" r="38" fill="url(#lampGlow)"/>
+      <rect x="212" y="436" width="28" height="18" rx="4" fill="#3A3530"/><rect x="216" y="439" width="20" height="12" rx="2" fill="#9CC2D0"/>
+      <g class="label-pin"><rect x="180" y="402" width="92" height="26" rx="13" fill="#3A3530"/><text x="226" y="420" text-anchor="middle" fill="#F7F2EA" font-family="DM Sans" font-size="12" font-weight="600">Telefon</text></g></g>
+    <g class="hotspot" id="hsSuitcase">
+      <ellipse class="glow" cx="316" cy="496" rx="60" ry="50" fill="url(#lampGlow)"/>
+      <rect x="272" y="468" width="88" height="57" rx="9" fill="#9FB0B5"/><rect x="272" y="490" width="88" height="6" fill="#86989E"/>
+      <rect x="306" y="460" width="20" height="12" rx="3" fill="#86989E"/>
+      <circle cx="287" cy="478" r="2.5" fill="#C9A24B"/><circle cx="345" cy="478" r="2.5" fill="#C9A24B"/>
+      <rect x="350" y="486" width="14" height="10" rx="2" fill="#C9A24B" opacity="0.8"/>
+      <g class="label-pin"><rect x="270" y="432" width="92" height="26" rx="13" fill="#3A3530"/><text x="316" y="450" text-anchor="middle" fill="#F7F2EA" font-family="DM Sans" font-size="12" font-weight="600">Valiz · Kıyafet</text></g></g>
+    <g class="hotspot" id="hsDoor">
+      <ellipse class="glow" cx="356" cy="350" rx="72" ry="130" fill="url(#lampGlow)"/>
+      <rect x="312" y="188" width="84" height="338" rx="5" fill="#E0D0B4"/><rect x="320" y="196" width="68" height="330" rx="3" fill="#EDE3D2"/>
+      <rect x="328" y="206" width="52" height="148" rx="3" fill="none" stroke="#D4C2A4" stroke-width="2.5"/>
+      <rect x="328" y="364" width="52" height="152" rx="3" fill="none" stroke="#D4C2A4" stroke-width="2.5"/>
+      <circle cx="332" cy="368" r="5" fill="#C9A24B"/><circle cx="332" cy="368" r="5" fill="none" stroke="#A8842F" stroke-width="1"/>
+      <rect x="340" y="214" width="28" height="14" rx="3" fill="#C9A24B" opacity="0.85"/>
+      <text x="354" y="225" text-anchor="middle" fill="#fff" font-family="Fraunces" font-size="10" font-weight="600">207</text>
+      <g class="label-pin"><rect x="316" y="150" width="78" height="26" rx="13" fill="#3A3530"/><text x="355" y="168" text-anchor="middle" fill="#F7F2EA" font-family="DM Sans" font-size="12" font-weight="600">Kapı</text></g></g>
+    <ellipse cx="155" cy="615" rx="125" ry="42" fill="#E0CBA8" opacity="0.55"/>
+    <ellipse cx="155" cy="615" rx="100" ry="32" fill="none" stroke="#C9A24B" stroke-width="1.5" opacity="0.4"/>
+  </svg>
+  <div class="overlay" id="ov"><div class="card" id="card"></div></div>
+</div>
 
 <script>
-  const S={ skin:'#F2D3B1', ear:'#E6B98E', hairCol:'#2c1b18', hairStyle:'long',
-    cloth:'tshirt', clothCol:'#2E5A6B', lip:'#C4604F', glasses:'off', ear2:'off', hat:'off',
-    brow:'soft', mouthV:'smile' };
+/* ============ AVATAR LOGIC ============ */
+const S={ skin:'#F2D3B1', ear:'#E6B98E', hairCol:'#2c1b18', hairStyle:'long', cloth:'tshirt', clothCol:'#2E5A6B', lip:'#C4604F' };
+const $=id=>document.getElementById(id);
+const head=$('head'),neck=$('neck'),earL=$('earL'),earR=$('earR'),hairFront=$('hairFront'),hairBack=$('hairBack'),
+  clothing=$('clothing'),glasses=$('glasses'),earrings=$('earrings'),hat=$('hat'),brows=$('brows'),mouth=$('mouth');
+const hairFrontPaths={
+  long:"M48 118 Q44 40 120 40 Q196 40 192 118 Q190 78 120 72 Q50 78 48 118 Z",
+  wavy:"M48 118 Q40 38 120 40 Q200 38 192 118 Q196 80 175 78 Q185 64 120 66 Q55 64 65 78 Q44 80 48 118 Z",
+  pony:"M52 116 Q48 44 120 44 Q192 44 188 116 Q188 80 120 74 Q52 80 52 116 Z",
+  bun:"M52 116 Q48 44 120 44 Q192 44 188 116 Q188 80 120 74 Q52 80 52 116 Z",
+  bob:"M46 140 Q42 42 120 40 Q198 42 194 140 Q190 84 120 78 Q50 84 46 140 Z",
+  short:"M52 110 Q50 46 120 46 Q190 46 188 110 Q188 76 120 70 Q52 76 52 110 Z",
+  curly:"M46 120 Q36 40 120 38 Q204 40 194 120 Q200 76 120 70 Q40 76 46 120 Z"};
+const hairBackPaths={
+  long:"M44 100 Q36 210 80 214 Q66 160 66 110 L174 110 Q174 160 160 214 Q204 210 196 100 Z",
+  wavy:"M42 100 Q30 195 78 212 Q66 200 70 175 Q58 195 84 200 Q70 155 70 110 L170 110 Q170 155 156 200 Q182 195 170 175 Q174 200 162 212 Q210 195 198 100 Z",
+  pony:"M186 86 Q224 118 210 180 Q202 214 184 188 Q198 150 184 110 Z",
+  bun:"", bob:"", short:"",
+  curly:"M40 110 Q28 180 82 192 Q60 180 68 150 L172 150 Q180 180 158 192 Q212 180 200 110 Z"};
+function renderHair(){
+  hairBack.setAttribute('d', hairBackPaths[S.hairStyle]||''); hairBack.setAttribute('fill', S.hairCol);
+  hairFront.setAttribute('d', hairFrontPaths[S.hairStyle]||''); hairFront.setAttribute('fill', S.hairCol);
+  let knob=$('bunKnob');
+  if(S.hairStyle==='bun'){ if(!knob){knob=document.createElementNS('http://www.w3.org/2000/svg','circle');knob.id='bunKnob';$('avatar').insertBefore(knob, hairFront);}
+    knob.setAttribute('cx',120);knob.setAttribute('cy',38);knob.setAttribute('r',20);knob.setAttribute('fill',S.hairCol);
+  } else if(knob){knob.remove();}
+  let tie=$('ponyTie');
+  if(S.hairStyle==='pony'){ if(!tie){tie=document.createElementNS('http://www.w3.org/2000/svg','circle');tie.id='ponyTie';$('avatar').appendChild(tie);}
+    tie.setAttribute('cx',190);tie.setAttribute('cy',96);tie.setAttribute('r',7);tie.setAttribute('fill','#00000033');
+  } else if(tie){tie.remove();}
+}
+function renderClothing(){ const c=S.clothCol; let svg='';
+  if(S.cloth==='tshirt'){ svg=`<path d="M62 240 Q60 196 120 184 Q180 196 178 240 Z" fill="${c}"/>`; }
+  else if(S.cloth==='marin'){ svg=`<path d="M62 240 Q60 196 120 184 Q180 196 178 240 Z" fill="#F0EDE4"/>
+    <clipPath id="mc"><path d="M62 240 Q60 196 120 184 Q180 196 178 240 Z"/></clipPath>
+    <g clip-path="url(#mc)"><rect x="55" y="196" width="130" height="7" fill="#2E5A6B"/><rect x="55" y="211" width="130" height="7" fill="#2E5A6B"/><rect x="55" y="226" width="130" height="7" fill="#2E5A6B"/></g>`; }
+  else if(S.cloth==='blazer'){ svg=`<path d="M62 240 Q60 196 120 184 Q180 196 178 240 Z" fill="${c}"/>
+    <path d="M120 184 L100 240 L120 218 L140 240 Z" fill="#F2EEE4"/><path d="M120 184 L96 206 M120 184 L144 206" stroke="rgba(0,0,0,0.22)" stroke-width="2.5" fill="none"/>`; }
+  else if(S.cloth==='trench'){ svg=`<path d="M58 240 Q58 192 120 182 Q182 192 182 240 Z" fill="#D9C7A8"/>
+    <line x1="120" y1="186" x2="120" y2="240" stroke="rgba(0,0,0,0.18)" stroke-width="2.5"/>
+    <circle cx="108" cy="210" r="2.5" fill="rgba(0,0,0,0.3)"/><circle cx="108" cy="226" r="2.5" fill="rgba(0,0,0,0.3)"/>
+    <path d="M92 188 L120 200 L148 188" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2.5"/>`; }
+  else if(S.cloth==='dress'){ svg=`<path d="M66 240 Q70 192 120 184 Q170 192 174 240 Z" fill="${c}"/><path d="M120 184 L120 240" stroke="rgba(255,255,255,0.18)" stroke-width="3"/>`; }
+  clothing.innerHTML=svg; }
+function renderBrows(){ brows.innerHTML=`<path d="M80 98 Q95 92 110 98"/><path d="M130 98 Q145 92 160 98"/>`; brows.setAttribute('stroke', S.hairCol); }
+function renderMouth(){ mouth.innerHTML=`<path d="M104 152 Q120 166 136 152 Q120 160 104 152 Z" fill="${S.lip}"/>`; }
+function setActive(c,el){ c.querySelectorAll('.active').forEach(n=>n.classList.remove('active')); el.classList.add('active'); }
+$('skin').addEventListener('click',e=>{ if(!e.target.dataset.c)return; S.skin=e.target.dataset.c; S.ear=e.target.dataset.e;
+  head.setAttribute('fill',S.skin); neck.setAttribute('fill',S.ear); earL.setAttribute('fill',S.ear); earR.setAttribute('fill',S.ear); setActive(e.currentTarget,e.target); });
+$('hairColor').addEventListener('click',e=>{ if(!e.target.dataset.c)return; S.hairCol=e.target.dataset.c; renderHair(); renderBrows(); setActive(e.currentTarget,e.target); });
+$('hairStyle').addEventListener('click',e=>{ if(!e.target.dataset.s)return; S.hairStyle=e.target.dataset.s; renderHair(); setActive(e.currentTarget,e.target); });
+$('clothType').addEventListener('click',e=>{ if(!e.target.dataset.t)return; S.cloth=e.target.dataset.t; renderClothing(); setActive(e.currentTarget,e.target); });
+$('clothColor').addEventListener('click',e=>{ if(!e.target.dataset.c)return; S.clothCol=e.target.dataset.c; renderClothing(); setActive(e.currentTarget,e.target); });
+$('lipColor').addEventListener('click',e=>{ if(!e.target.dataset.c)return; S.lip=e.target.dataset.c; renderMouth(); setActive(e.currentTarget,e.target); });
+$('glassesOpt').addEventListener('click',e=>{ if(!e.target.dataset.g)return; const g=e.target.dataset.g;
+  if(g==='off'){ glasses.style.display='none'; }
+  else if(g==='round'){ glasses.style.display='block'; glasses.innerHTML=`<circle cx="95" cy="116" r="18"/><circle cx="145" cy="116" r="18"/><line x1="113" y1="116" x2="127" y2="116"/>`; }
+  else if(g==='square'){ glasses.style.display='block'; glasses.innerHTML=`<rect x="78" y="102" width="34" height="28" rx="5"/><rect x="128" y="102" width="34" height="28" rx="5"/><line x1="112" y1="116" x2="128" y2="116"/>`; }
+  setActive(e.currentTarget,e.target); });
+$('earOpt').addEventListener('click',e=>{ if(!e.target.dataset.e)return; earrings.style.display=e.target.dataset.e==='on'?'block':'none'; setActive(e.currentTarget,e.target); });
+$('hatOpt').addEventListener('click',e=>{ if(!e.target.dataset.h)return;
+  if(e.target.dataset.h==='off'){ hat.style.display='none'; }
+  else { hat.style.display='block'; hat.innerHTML=`<ellipse cx="120" cy="50" rx="62" ry="26" fill="#C4452F"/><ellipse cx="120" cy="44" rx="52" ry="20" fill="#A83926"/><circle cx="145" cy="34" r="6" fill="#8B2A1E"/>`; }
+  setActive(e.currentTarget,e.target); });
+$('nameInput').addEventListener('input',()=>{ $('nameDisplay').textContent=$('nameInput').value?`« ${$('nameInput').value} »`:''; });
 
-  const $=id=>document.getElementById(id);
-  const head=$('head'),neck=$('neck'),earL=$('earL'),earR=$('earR'),
-    hairFront=$('hairFront'),hairBack=$('hairBack'),clothing=$('clothing'),
-    glasses=$('glasses'),earrings=$('earrings'),hat=$('hat'),brows=$('brows'),mouth=$('mouth');
+/* ============ SCENE TRANSITION ============ */
+let cameFromHotel=false;
+function showAvatar(){ $('hotelScreen').classList.remove('active'); $('avatarScreen').classList.add('active'); window.scrollTo(0,0); }
+function showHotel(){ $('avatarScreen').classList.remove('active'); $('hotelScreen').classList.add('active'); window.scrollTo(0,0); }
+$('go').addEventListener('click',()=>{ showHotel(); });
 
-  // ---------- HAIR ----------
-  const hairFrontPaths={
-    long:  "M48 118 Q44 40 120 40 Q196 40 192 118 Q190 78 120 72 Q50 78 48 118 Z",
-    wavy:  "M48 118 Q40 38 120 40 Q200 38 192 118 Q196 80 175 78 Q185 64 120 66 Q55 64 65 78 Q44 80 48 118 Z",
-    pony:  "M52 116 Q48 44 120 44 Q192 44 188 116 Q188 80 120 74 Q52 80 52 116 Z",
-    bun:   "M52 116 Q48 44 120 44 Q192 44 188 116 Q188 80 120 74 Q52 80 52 116 Z",
-    bob:   "M46 140 Q42 42 120 40 Q198 42 194 140 Q190 84 120 78 Q50 84 46 140 Z",
-    short: "M52 110 Q50 46 120 46 Q190 46 188 110 Q188 76 120 70 Q52 76 52 110 Z",
-    curly: "M46 120 Q36 40 120 38 Q204 40 194 120 Q200 76 120 70 Q40 76 46 120 Z"
-  };
-  const hairBackPaths={
-    long:  "M44 100 Q36 210 80 214 Q66 160 66 110 L174 110 Q174 160 160 214 Q204 210 196 100 Z",
-    wavy:  "M42 100 Q30 195 78 212 Q66 200 70 175 Q58 195 84 200 Q70 155 70 110 L170 110 Q170 155 156 200 Q182 195 170 175 Q174 200 162 212 Q210 195 198 100 Z",
-    pony:  "M186 86 Q224 118 210 180 Q202 214 184 188 Q198 150 184 110 Z",
-    bun:   "",
-    bob:   "",
-    short: "",
-    curly: "M40 110 Q28 180 82 192 Q60 180 68 150 L172 150 Q180 180 158 192 Q212 180 200 110 Z"
-  };
-  const hairFrontGloss = {
-    curly: "M70 70 a14 14 0 1 0 0.1 0 M120 64 a14 14 0 1 0 0.1 0 M170 70 a14 14 0 1 0 0.1 0"
-  };
+/* ============ HOTEL LOGIC ============ */
+const ov=$('ov'); const card=$('card');
+const dialogs={
+  window:{ ce:'La fenêtre · Pencere', title:'Paris uyanıyor', fr:'« Quelle belle vue ! »',
+    p:'Pencereden yumuşak sabah ışığı süzülüyor. Aşağıda dar bir sokak, çatıların arasından uzakta hafifçe Eiffel Kulesi. Şehir seni bekliyor.',
+    actions:[{t:'Biraz daha izle',cls:'btn'},{t:'Dışarı çıkmaya hazırım →',cls:'btn primary'}] },
+  phone:{ ce:'Le téléphone · Telefon', title:'Bir mesajın var', fr:'« Bienvenue à Paris ! »',
+    p:'Otelden karşılama: "Bienvenue ! Kahvaltı 7-10 arası, zemin katta." Tam anlamadıysan sorun değil — yavaş yavaş alışacaksın.',
+    actions:[{t:'Kapat',cls:'btn'}] },
+  door:{ ce:'La porte · Kapı', title:'Şehre çıkalım mı?', fr:'« On y va ? »',
+    p:'Kapının ardında Paris sokakları var. Hazırsan çık — istediğin yere gidebilir, istediğinle konuşabilirsin. Acele yok.',
+    actions:[{t:'Henüz değil',cls:'btn'},{t:'Şehre çık →',cls:'btn primary'}] }
+};
+function openD(key){ const d=dialogs[key];
+  let btns=d.actions.map(a=>`<button class="${a.cls}">${a.t}</button>`).join('');
+  card.innerHTML=`<div class="ceyebrow">${d.ce}</div><h2>${d.title}</h2><div class="fr">${d.fr}</div><p>${d.p}</p><div class="actions">${btns}</div>`;
+  ov.classList.add('show');
+  card.querySelectorAll('.btn').forEach(b=>b.addEventListener('click',()=>ov.classList.remove('show'))); }
+$('hsWindow').addEventListener('click',()=>openD('window'));
+$('hsPhone').addEventListener('click',()=>openD('phone'));
+$('hsDoor').addEventListener('click',()=>openD('door'));
+$('hsSuitcase').addEventListener('click',()=>{ cameFromHotel=true; $('go').textContent='✓ Hazır → odaya dön'; showAvatar(); });
+ov.addEventListener('click',e=>{ if(e.target===ov) ov.classList.remove('show'); });
 
-  function renderHair(){
-    hairBack.setAttribute('d', hairBackPaths[S.hairStyle]||'');
-    hairBack.setAttribute('fill', S.hairCol);
-    hairFront.setAttribute('d', hairFrontPaths[S.hairStyle]||'');
-    hairFront.setAttribute('fill', S.hairCol);
-    // bun knob
-    let knob=$('bunKnob');
-    if(S.hairStyle==='bun'){
-      if(!knob){knob=document.createElementNS('http://www.w3.org/2000/svg','circle');knob.id='bunKnob';
-        $('avatar').insertBefore(knob, hairFront);}
-      knob.setAttribute('cx',120);knob.setAttribute('cy',38);knob.setAttribute('r',20);knob.setAttribute('fill',S.hairCol);
-    } else if(knob){knob.remove();}
-    // pony tie
-    let tie=$('ponyTie');
-    if(S.hairStyle==='pony'){
-      if(!tie){tie=document.createElementNS('http://www.w3.org/2000/svg','circle');tie.id='ponyTie';
-        $('avatar').appendChild(tie);}
-      tie.setAttribute('cx',190);tie.setAttribute('cy',96);tie.setAttribute('r',7);tie.setAttribute('fill','#00000033');
-    } else if(tie){tie.remove();}
-  }
-
-  // ---------- CLOTHING ----------
-  function renderClothing(){
-    const c=S.clothCol; let svg='';
-    if(S.cloth==='tshirt'){
-      svg=`<path d="M62 240 Q60 196 120 184 Q180 196 178 240 Z" fill="${c}"/>`;
-    } else if(S.cloth==='marin'){
-      svg=`<path d="M62 240 Q60 196 120 184 Q180 196 178 240 Z" fill="#F0EDE4"/>
-        <clipPath id="mc"><path d="M62 240 Q60 196 120 184 Q180 196 178 240 Z"/></clipPath>
-        <g clip-path="url(#mc)">
-          <rect x="55" y="196" width="130" height="7" fill="#2E5A6B"/>
-          <rect x="55" y="211" width="130" height="7" fill="#2E5A6B"/>
-          <rect x="55" y="226" width="130" height="7" fill="#2E5A6B"/></g>`;
-    } else if(S.cloth==='blazer'){
-      svg=`<path d="M62 240 Q60 196 120 184 Q180 196 178 240 Z" fill="${c}"/>
-        <path d="M120 184 L100 240 L120 218 L140 240 Z" fill="#F2EEE4"/>
-        <path d="M120 184 L96 206 M120 184 L144 206" stroke="rgba(0,0,0,0.22)" stroke-width="2.5" fill="none"/>`;
-    } else if(S.cloth==='trench'){
-      svg=`<path d="M58 240 Q58 192 120 182 Q182 192 182 240 Z" fill="#D9C7A8"/>
-        <line x1="120" y1="186" x2="120" y2="240" stroke="rgba(0,0,0,0.18)" stroke-width="2.5"/>
-        <circle cx="108" cy="210" r="2.5" fill="rgba(0,0,0,0.3)"/>
-        <circle cx="108" cy="226" r="2.5" fill="rgba(0,0,0,0.3)"/>
-        <path d="M92 188 L120 200 L148 188" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2.5"/>`;
-    } else if(S.cloth==='dress'){
-      svg=`<path d="M66 240 Q70 192 120 184 Q170 192 174 240 Z" fill="${c}"/>
-        <path d="M120 184 L120 240" stroke="rgba(255,255,255,0.18)" stroke-width="3"/>`;
-    }
-    clothing.innerHTML=svg;
-  }
-
-  function renderBrows(){
-    brows.innerHTML=`<path d="M80 98 Q95 92 110 98"/><path d="M130 98 Q145 92 160 98"/>`;
-    brows.setAttribute('stroke', shade(S.hairCol));
-  }
-  function renderMouth(){
-    mouth.innerHTML=`<path d="M104 152 Q120 166 136 152 Q120 160 104 152 Z" fill="${S.lip}"/>`;
-  }
-  function shade(hex){
-    // hair-based brow color, slightly darker
-    return hex;
-  }
-
-  function setActive(c,el){ c.querySelectorAll('.active').forEach(n=>n.classList.remove('active')); el.classList.add('active'); }
-
-  $('skin').addEventListener('click',e=>{ if(!e.target.dataset.c)return;
-    S.skin=e.target.dataset.c; S.ear=e.target.dataset.e;
-    head.setAttribute('fill',S.skin); neck.setAttribute('fill',S.ear);
-    earL.setAttribute('fill',S.ear); earR.setAttribute('fill',S.ear);
-    setActive(e.currentTarget,e.target); });
-
-  $('hairColor').addEventListener('click',e=>{ if(!e.target.dataset.c)return;
-    S.hairCol=e.target.dataset.c; renderHair(); renderBrows(); setActive(e.currentTarget,e.target); });
-
-  $('hairStyle').addEventListener('click',e=>{ if(!e.target.dataset.s)return;
-    S.hairStyle=e.target.dataset.s; renderHair(); setActive(e.currentTarget,e.target); });
-
-  $('clothType').addEventListener('click',e=>{ if(!e.target.dataset.t)return;
-    S.cloth=e.target.dataset.t; renderClothing(); setActive(e.currentTarget,e.target); });
-
-  $('clothColor').addEventListener('click',e=>{ if(!e.target.dataset.c)return;
-    S.clothCol=e.target.dataset.c; renderClothing(); setActive(e.currentTarget,e.target); });
-
-  $('lipColor').addEventListener('click',e=>{ if(!e.target.dataset.c)return;
-    S.lip=e.target.dataset.c; renderMouth(); setActive(e.currentTarget,e.target); });
-
-  $('glassesOpt').addEventListener('click',e=>{ if(!e.target.dataset.g)return;
-    const g=e.target.dataset.g;
-    if(g==='off'){ glasses.style.display='none'; }
-    else if(g==='round'){ glasses.style.display='block';
-      glasses.innerHTML=`<circle cx="95" cy="116" r="18"/><circle cx="145" cy="116" r="18"/><line x1="113" y1="116" x2="127" y2="116"/>`; }
-    else if(g==='square'){ glasses.style.display='block';
-      glasses.innerHTML=`<rect x="78" y="102" width="34" height="28" rx="5"/><rect x="128" y="102" width="34" height="28" rx="5"/><line x1="112" y1="116" x2="128" y2="116"/>`; }
-    setActive(e.currentTarget,e.target); });
-
-  $('earOpt').addEventListener('click',e=>{ if(!e.target.dataset.e)return;
-    earrings.style.display=e.target.dataset.e==='on'?'block':'none'; setActive(e.currentTarget,e.target); });
-
-  $('hatOpt').addEventListener('click',e=>{ if(!e.target.dataset.h)return;
-    if(e.target.dataset.h==='off'){ hat.style.display='none'; }
-    else { hat.style.display='block';
-      hat.innerHTML=`<ellipse cx="120" cy="50" rx="62" ry="26" fill="#C4452F"/>
-        <ellipse cx="120" cy="44" rx="52" ry="20" fill="#A83926"/>
-        <circle cx="145" cy="34" r="6" fill="#8B2A1E"/>`; }
-    setActive(e.currentTarget,e.target); });
-
-  $('nameInput').addEventListener('input',()=>{ $('nameDisplay').textContent=$('nameInput').value?`« ${$('nameInput').value} »`:''; });
-  $('go').addEventListener('click',()=>{ const n=$('nameInput').value||'voyageur';
-    alert(`Bienvenue ${n} ! 🇫🇷\n\n(Sıradaki: otel odası.)`); });
-
-  renderHair(); renderClothing(); renderBrows(); renderMouth();
+/* init */
+renderHair(); renderClothing(); renderBrows(); renderMouth();
 </script>
-</body> 
+</body>
 </html>
