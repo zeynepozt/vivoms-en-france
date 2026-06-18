@@ -97,6 +97,32 @@
   .btn:active { transform:scale(0.96); }
   .btn.primary { background:#B8553F; color:#fff; border-color:#B8553F; }
   .soon { display:inline-block; font-size:11px; background:#C9A24B; color:#fff; padding:3px 8px; border-radius:999px; margin-left:6px; font-weight:600; }
+
+  /* ===== CHARACTER + DIALOGUE ===== */
+  .character-layer { position:absolute; left:50%; bottom:40%; transform:translateX(-50%); z-index:12; height:54%; max-height:480px; pointer-events:none; display:none; }
+  .character-layer img { height:100%; width:auto; filter:drop-shadow(0 12px 24px rgba(0,0,0,0.35)); }
+  .character-layer.show { display:block; }
+  .charname-tag { position:absolute; left:50%; bottom:38%; transform:translateX(-50%); z-index:13; font-family:'Fraunces',serif; color:#fff; font-size:17px; font-weight:600; text-shadow:0 1px 6px rgba(0,0,0,0.6); background:rgba(184,85,63,0.92); padding:4px 18px; border-radius:999px; display:none; }
+  .charname-tag.show { display:block; }
+  .visitbadge { position:absolute; top:54px; right:18px; z-index:30; font-size:11px; color:#fff; background:rgba(184,85,63,0.85); padding:4px 10px; border-radius:999px; display:none; }
+  .visitbadge.show { display:block; }
+  .dbox { position:absolute; left:0; right:0; bottom:0; z-index:25; background:#F7F2EA; border-top:3px solid #C9A24B; border-radius:22px 22px 0 0; padding:20px 18px 26px; box-shadow:0 -10px 40px rgba(0,0,0,0.35); display:none; max-height:52%; overflow-y:auto; }
+  .dbox.show { display:block; }
+  .dbox .speaker { font-family:'Fraunces',serif; font-size:13px; color:#B8553F; font-weight:600; margin-bottom:6px; }
+  .dbox .line { font-size:20px; line-height:1.35; color:#3A3530; font-family:'Fraunces',serif; margin-bottom:6px; }
+  .dbox .help-row { margin-bottom:14px; }
+  .dbox .help-btn { font-size:12px; color:#5B7C8A; background:none; border:1.5px solid #5B7C8A; border-radius:999px; padding:4px 12px; cursor:pointer; font-family:'DM Sans'; font-weight:600; }
+  .dbox .help-text { margin-top:8px; font-size:14px; color:#8A7E6E; line-height:1.5; display:none; padding:10px 12px; background:#efe7d8; border-radius:10px; }
+  .dbox .help-text.show { display:block; }
+  .dbox .choices { display:flex; flex-direction:column; gap:9px; }
+  .dbox .choice { text-align:left; padding:12px 15px; border:2px solid #D8CCB8; border-radius:14px; background:#fff; cursor:pointer; font-family:'DM Sans'; font-size:15px; font-weight:500; color:#3A3530; transition:all .12s; position:relative; }
+  .dbox .choice:hover { border-color:#3A3530; }
+  .dbox .choice .c-fr { font-weight:600; padding-right:28px; }
+  .dbox .choice .c-help { font-size:12px; color:#A99; margin-top:3px; display:none; }
+  .dbox .choice.reveal .c-help { display:block; }
+  .dbox .choice .qmark { position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:13px; color:#5B7C8A; border:1.5px solid #5B7C8A; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; }
+  .dbox .dfinish { margin-top:6px; padding:13px; background:#B8553F; color:#fff; border:none; border-radius:14px; font-family:'Fraunces'; font-size:16px; font-weight:600; cursor:pointer; width:100%; }
+  .dbox .drestart { margin-top:10px; background:none; border:none; color:#A99; font-size:13px; cursor:pointer; font-family:'DM Sans'; text-decoration:underline; }
 </style>
 </head>
 <body>
@@ -243,12 +269,16 @@
   <img class="bg" id="venueBg" src="" alt="mekan">
   <div class="topbar">
     <div class="roomtag" id="venueName"></div>
-    <div class="hint">Personnage bientôt</div>
+    <div class="hint" id="venueHint">Personnage bientôt</div>
   </div>
-  <div class="nav">
+  <div class="visitbadge" id="visitBadge"></div>
+  <img class="character-layer" id="charLayer" src="" alt="karakter">
+  <div class="charname-tag" id="charNameTag"></div>
+  <div class="nav" id="venueNav">
     <button class="navbtn" id="venueBack">← La rue</button>
     <button class="navbtn primary" id="venueTalk">Parler</button>
   </div>
+  <div class="dbox" id="dbox"></div>
   <div class="overlay" id="ovVenue"><div class="card" id="cardVenue"></div></div>
 </div>
 
@@ -317,7 +347,7 @@ $('hatOpt').addEventListener('click',e=>{ if(!e.target.dataset.h)return;
   if(e.target.dataset.h==='off'){ hat.style.display='none'; }
   else { hat.style.display='block'; hat.innerHTML=`<ellipse cx="120" cy="50" rx="62" ry="26" fill="#C4452F"/><ellipse cx="120" cy="44" rx="52" ry="20" fill="#A83926"/><circle cx="145" cy="34" r="6" fill="#8B2A1E"/>`; }
   setActive(e.currentTarget,e.target); });
-$('nameInput').addEventListener('input',()=>{ $('nameDisplay').textContent=$('nameInput').value?`« ${$('nameInput').value} »`:''; });
+$('nameInput').addEventListener('input',()=>{ $('nameDisplay').textContent=$('nameInput').value?`« ${$('nameInput').value} »`:''; try{ localStorage.setItem('vef_username', $('nameInput').value||'voyageur'); }catch(e){} });
 
 /* ============ SCENE NAVIGATION ============ */
 function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
@@ -351,6 +381,7 @@ $('zGeri').addEventListener('click',function(){show('streetScreen');});
 /* ---- VENUE (interior) ---- */
 var venues={
   kafe:{ img:'F6328401-ADB4-419B-89E8-84F1467202C0.png', name:'Café de Flore', e:'Le café · Kafe', fr:'« Un café, s\u2019il vous plaît »',
+    char:'D497B5C2-57A4-4635-8584-D3255158E88A.png', charName:'Julien', hasChat:true,
     p:'Sıcacık bir kafe. Garson Julien birazdan seninle konuşacak — kahveni alabilir, hava durumundan sohbet edebilir.' },
   firin:{ img:'5A0EA8A0-E10D-4395-943F-BA555A1E8CED.png', name:'Boulangerie Margot', e:'La boulangerie · Fırın', fr:'« Une baguette ! »',
     p:'Taze ekmek kokusu. Fırıncı Margot güler yüzlü — baget, kruvasan, pain au chocolat sipariş edebilirsin.' },
@@ -360,25 +391,143 @@ var venues={
     p:'Rengârenk çiçekler. Élise sana buket hazırlayabilir, hangi çiçeği sevdiğini sorabilir.' }
 };
 var currentVenue=null, venueFrom='streetScreen';
+function getUserName(){ try{ return localStorage.getItem('vef_username')||'voyageur'; }catch(e){ return 'voyageur'; } }
+
 function openVenue(key, from){
   currentVenue=key; venueFrom=from;
   var v=venues[key];
   document.getElementById('venueBg').src=v.img;
   document.getElementById('venueName').textContent=v.name;
+  // karakter katmanı
+  var cl=document.getElementById('charLayer'), nt=document.getElementById('charNameTag'), vb=document.getElementById('visitBadge');
+  // diyalog kutusunu/temizle
+  document.getElementById('dbox').classList.remove('show');
+  document.getElementById('dbox').innerHTML='';
+  document.getElementById('venueNav').style.display='flex';
+  if(v.char){
+    cl.src=v.char; cl.classList.add('show');
+    nt.textContent=v.charName; nt.classList.add('show');
+  } else {
+    cl.classList.remove('show'); nt.classList.remove('show');
+  }
+  vb.classList.remove('show');
   show('venueScreen');
 }
 $('zKafe').addEventListener('click',function(){openVenue('kafe','streetScreen');});
 $('zFirin').addEventListener('click',function(){openVenue('firin','streetScreen');});
 $('zKitapci').addEventListener('click',function(){openVenue('kitapci','street2Screen');});
 $('zCicekci').addEventListener('click',function(){openVenue('cicekci','street2Screen');});
-$('venueBack').addEventListener('click',function(){show(venueFrom);});
+$('venueBack').addEventListener('click',function(){
+  document.getElementById('dbox').classList.remove('show');
+  show(venueFrom);
+});
+
 $('venueTalk').addEventListener('click',function(){
   var v=venues[currentVenue];
-  document.getElementById('cardVenue').innerHTML='<div class="eyebrow2">'+v.e+'</div><h2>'+v.name+' <span class="soon">AI yakında</span></h2><div class="fr">'+v.fr+'</div><p>'+v.p+'</p><p style="color:#8A7E6E;">Buraya birazdan karakteri ve gerçek Fransızca sohbeti ekleyeceğiz. 🇫🇷</p><div class="actions"><button class="btn primary" id="vOk">Tamam</button></div>';
+  if(v.hasChat && currentVenue==='kafe'){ startCafeChat(); return; }
+  // diğer mekanlar: yakında
+  document.getElementById('cardVenue').innerHTML='<div class="eyebrow2">'+v.e+'</div><h2>'+v.name+' <span class="soon">Bientôt</span></h2><div class="fr">'+v.fr+'</div><p>'+v.p+'</p><p style="color:#8A7E6E;">Bu mekânın karakteri ve sohbeti yakında eklenecek. 🇫🇷</p><div class="actions"><button class="btn primary" id="vOk">Tamam</button></div>';
   document.getElementById('ovVenue').classList.add('show');
   document.getElementById('vOk').addEventListener('click',function(){document.getElementById('ovVenue').classList.remove('show');});
 });
 document.getElementById('ovVenue').addEventListener('click',function(e){ if(e.target.id==='ovVenue') document.getElementById('ovVenue').classList.remove('show'); });
+
+/* ====== KAFE — HAFIZALI DİYALOG (Julien) ====== */
+var CAFE_MEM='vef_cafe_julien';
+function loadCafeMem(){ try{ return JSON.parse(localStorage.getItem(CAFE_MEM))||{visits:0,lastOrder:null}; }catch(e){ return {visits:0,lastOrder:null}; } }
+function saveCafeMem(m){ try{ localStorage.setItem(CAFE_MEM, JSON.stringify(m)); }catch(e){} }
+var cafeMem, cafeNodes, cafeUser;
+var orderNames={ cafe:'un café', aulait:'un café au lait', the:'un thé' };
+
+function startCafeChat(){
+  cafeMem=loadCafeMem();
+  cafeUser=getUserName();
+  cafeMem.visits+=1; saveCafeMem(cafeMem);
+  var vb=document.getElementById('visitBadge');
+  vb.textContent=cafeMem.visits+'. ziyaret'; vb.classList.add('show');
+  document.getElementById('venueNav').style.display='none';
+  cafeNodes=buildCafeNodes();
+  renderCafe('start');
+  document.getElementById('dbox').classList.add('show');
+}
+
+function buildCafeNodes(){
+  var openLine, openHelp;
+  if(cafeMem.visits===1){
+    openLine='Bonjour ! Bienvenue au café. 😊';
+    openHelp='Merhaba! Kafeye hoş geldiniz. — İlk ziyaretin, Julien seni yeni tanıyor.';
+  } else if(cafeMem.visits===2){
+    openLine='Ah, '+cafeUser+' ! Vous revoilà ! 😄';
+    openHelp='Ah, '+cafeUser+'! Yine geldiniz! — Julien seni hatırladı ("revoilà" = işte yine buradasınız).';
+  } else {
+    if(cafeMem.lastOrder){
+      openLine='Bonjour '+cafeUser+' ! Comme d\'habitude, '+orderNames[cafeMem.lastOrder]+' ? 😊';
+      openHelp='Merhaba '+cafeUser+'! Her zamanki gibi '+orderNames[cafeMem.lastOrder]+' mı? — Julien geçen sefer ne içtiğini hatırlıyor ("comme d\'habitude" = her zamanki gibi).';
+    } else {
+      openLine='Bonjour '+cafeUser+' ! Content de vous revoir ! 😊';
+      openHelp='Merhaba '+cafeUser+'! Sizi tekrar görmek güzel!';
+    }
+  }
+  return {
+    start:{ speaker:'Julien', line:openLine, help:openHelp,
+      choices: (cafeMem.visits>=3 && cafeMem.lastOrder) ? [
+        { fr:'Oui, comme d\'habitude !', help:'Evet, her zamanki gibi!', go:'serveUsual' },
+        { fr:'Non, autre chose aujourd\'hui.', help:'Hayır, bugün başka bir şey.', go:'order' },
+        { fr:'Bonjour Julien !', help:'Merhaba Julien! (önce selam)', go:'order' }
+      ] : [
+        { fr:'Bonjour !', help:'Merhaba!', go:'order' },
+        { fr:'Salut !', help:'Selam! (samimi)', go:'order' }
+      ] },
+    serveUsual:{ speaker:'Julien', line:'Parfait ! Je vous prépare ça. ☕', help:'Mükemmel! Hemen hazırlıyorum.',
+      choices:[ { fr:'Merci Julien !', help:'Teşekkürler Julien!', go:'served' } ] },
+    order:{ speaker:'Julien', line:'Qu\'est-ce que vous voulez boire ? 😊', help:'Ne içmek istersiniz? ("boire" = içmek)',
+      choices:[
+        { fr:'Un café, s\'il vous plaît.', help:'Bir kahve, lütfen.', go:'served', order:'cafe' },
+        { fr:'Un café au lait, s\'il vous plaît.', help:'Sütlü kahve, lütfen.', go:'served', order:'aulait' },
+        { fr:'Un thé, s\'il vous plaît.', help:'Bir çay, lütfen.', go:'served', order:'the' }
+      ] },
+    served:{ speaker:'Julien', line:'Et voilà ! Bonne dégustation. ☕✨', help:'İşte buyurun! Afiyet olsun. ("Bonne dégustation" = afiyet olsun)',
+      choices:[
+        { fr:'Il fait beau aujourd\'hui, non ?', help:'Bugün hava güzel, değil mi?', go:'weather' },
+        { fr:'Merci, c\'est parfait.', help:'Teşekkürler, mükemmel.', go:'end' }
+      ] },
+    weather:{ speaker:'Julien', line:'Ah oui, un vrai temps de printemps ! 🌸', help:'Ah evet, tam bir ilkbahar havası!',
+      choices:[ { fr:'Merci, au revoir !', help:'Teşekkürler, hoşça kalın!', go:'end' } ] },
+    end:{ speaker:'Julien', line:(cafeMem.visits>=2 ? ('Au revoir '+cafeUser+', à très bientôt ! 👋') : 'Au revoir, et à bientôt ! 👋'),
+      help:'Hoşça kalın, çok yakında görüşürüz! ("à très bientôt" = çok yakında görüşürüz)', choices:[], final:true }
+  };
+}
+
+function renderCafe(key){
+  var n=cafeNodes[key];
+  var dbox=document.getElementById('dbox');
+  var html='<div class="speaker">💬 '+n.speaker+'</div>';
+  html+='<div class="line">'+n.line+'</div>';
+  html+='<div class="help-row"><button class="help-btn" onclick="this.nextElementSibling.classList.toggle(\'show\')">? Anlamı</button><div class="help-text">'+n.help+'</div></div>';
+  if(n.final){
+    html+='<button class="dfinish" id="cafeFinish">✓ Terminé</button>';
+    html+='<button class="drestart" id="cafeRestart">Baştan konuş</button>';
+  } else {
+    html+='<div class="choices">';
+    n.choices.forEach(function(c){
+      html+='<button class="choice" data-go="'+c.go+'"'+(c.order?(' data-order="'+c.order+'"'):'')+'>'+
+        '<span class="qmark" onclick="event.stopPropagation(); this.parentElement.classList.toggle(\'reveal\')">?</span>'+
+        '<div class="c-fr">'+c.fr+'</div><div class="c-help">'+c.help+'</div></button>';
+    });
+    html+='</div>';
+  }
+  dbox.innerHTML=html;
+  dbox.querySelectorAll('.choice').forEach(function(b){
+    b.addEventListener('click',function(){
+      if(b.dataset.order){ cafeMem.lastOrder=b.dataset.order; saveCafeMem(cafeMem); }
+      renderCafe(b.dataset.go);
+    });
+  });
+  var cf=document.getElementById('cafeFinish');
+  if(cf) cf.addEventListener('click',function(){ dbox.classList.remove('show'); document.getElementById('venueNav').style.display='flex'; });
+  var cr=document.getElementById('cafeRestart');
+  if(cr) cr.addEventListener('click',function(){ renderCafe('start'); });
+}
 
 /* init avatar render */
 renderHair(); renderClothing(); renderBrows(); renderMouth();
