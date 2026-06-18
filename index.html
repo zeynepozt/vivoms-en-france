@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crée ton personnage</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600&display=swap');
+  :root { --paper:#F5EFE6; --ink:#2B2722; --rouge:#C4452F; --bleu:#2E5A6B; --gold:#D9A441; --soft:#EAE1D2; --line:#D8CCB8; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--paper); color:var(--ink); min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:24px 16px 48px; background-image:radial-gradient(circle at 1px 1px, rgba(43,39,34,0.04) 1px, transparent 0); background-size:22px 22px; }
+  .eyebrow { font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:var(--rouge); font-weight:600; margin-bottom:6px; }
+  h1 { font-family:'Fraunces',serif; font-size:34px; font-weight:600; line-height:1.05; text-align:center; margin-bottom:4px; }
+  .sub { font-size:14px; color:#6F665A; text-align:center; margin-bottom:22px; max-width:330px; }
+  .stage { width:210px; height:210px; border-radius:50%; background:radial-gradient(circle at 50% 35%, #FBF6EC, #E6DAC6); border:3px solid var(--ink); position:relative; overflow:hidden; margin-bottom:8px; box-shadow:6px 6px 0 rgba(43,39,34,0.12); }
+  .stage svg { width:100%; height:100%; display:block; }
+  .avatar-name { font-family:'Fraunces',serif; font-size:20px; margin-bottom:20px; min-height:26px; }
+  .panel { width:100%; max-width:400px; background:#fff; border:2px solid var(--ink); border-radius:18px; padding:18px; box-shadow:5px 5px 0 rgba(43,39,34,0.1); }
+  .row { margin-bottom:18px; } .row:last-child { margin-bottom:0; }
+  .row-label { font-size:12px; letter-spacing:0.12em; text-transform:uppercase; font-weight:600; color:#8A8073; margin-bottom:8px; }
+  .swatches { display:flex; gap:8px; flex-wrap:wrap; }
+  .swatch { width:36px; height:36px; border-radius:10px; border:2px solid var(--line); cursor:pointer; transition:transform .12s, border-color .12s; }
+  .swatch:hover { transform:translateY(-2px); }
+  .swatch.active { border-color:var(--ink); border-width:3px; transform:translateY(-2px); }
+  .opt-row { display:flex; gap:8px; flex-wrap:wrap; }
+  .opt { padding:8px 14px; border:2px solid var(--line); border-radius:999px; background:#fff; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all .12s; }
+  .opt:hover { border-color:var(--ink); }
+  .opt.active { background:var(--ink); color:var(--paper); border-color:var(--ink); }
+  .name-input { width:100%; padding:11px 14px; border:2px solid var(--line); border-radius:12px; font-family:'DM Sans',sans-serif; font-size:15px; color:var(--ink); background:var(--paper); }
+  .name-input:focus { outline:none; border-color:var(--bleu); }
+  .cta { width:100%; max-width:400px; margin-top:20px; padding:15px; background:var(--rouge); color:#fff; border:2px solid var(--ink); border-radius:14px; font-family:'Fraunces',serif; font-size:17px; font-weight:600; cursor:pointer; box-shadow:4px 4px 0 var(--ink); transition:transform .1s, box-shadow .1s; }
+  .cta:hover { transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--ink); }
+  .cta:active { transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink); }
+  .note { font-size:12px; color:#8A8073; text-align:center; margin-top:14px; max-width:380px; }
+</style>
+</head>
+<body>
+  <div class="eyebrow">Bienvenue &middot; Adım 1</div>
+  <h1>Crée ton personnage</h1>
+  <p class="sub">Bu sürüm tamamen çevrimdışı çalışır — internet gerekmez, uygulamada da açılır.</p>
+
+  <div class="stage">
+    <svg viewBox="0 0 240 240" id="avatar" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <clipPath id="faceClip"><ellipse cx="120" cy="120" rx="70" ry="76"/></clipPath>
+      </defs>
+      <!-- BACK HAIR -->
+      <path id="hairBack" d="" />
+      <!-- NECK -->
+      <path d="M104 178 Q104 200 120 200 Q136 200 136 178 L136 165 L104 165 Z" fill="#E6B98E" id="neck"/>
+      <!-- CLOTHING -->
+      <g id="clothing"></g>
+      <!-- EARS -->
+      <ellipse cx="52" cy="128" rx="9" ry="13" fill="#E6B98E" id="earL"/>
+      <ellipse cx="188" cy="128" rx="9" ry="13" fill="#E6B98E" id="earR"/>
+      <!-- EARRINGS -->
+      <g id="earrings" style="display:none">
+        <circle cx="52" cy="142" r="5" fill="#D9A441"/>
+        <circle cx="188" cy="142" r="5" fill="#D9A441"/>
+      </g>
+      <!-- FACE -->
+      <ellipse id="head" cx="120" cy="120" rx="70" ry="76" fill="#F2D3B1"/>
+      <!-- CHEEKS -->
+      <ellipse cx="80" cy="138" rx="13" ry="8" fill="#E8917F" opacity="0.35"/>
+      <ellipse cx="160" cy="138" rx="13" ry="8" fill="#E8917F" opacity="0.35"/>
+      <!-- EYEBROWS -->
+      <g id="brows" fill="none" stroke="#5A3A26" stroke-width="3.5" stroke-linecap="round"></g>
+      <!-- EYES -->
+      <g id="eyes">
+        <ellipse cx="95" cy="115" rx="8" ry="10" fill="#fff"/>
+        <ellipse cx="145" cy="115" rx="8" ry="10" fill="#fff"/>
+        <circle cx="96" cy="116" r="5.5" fill="#4A3520"/>
+        <circle cx="146" cy="116" r="5.5" fill="#4A3520"/>
+        <circle cx="98" cy="113" r="2" fill="#fff"/>
+        <circle cx="148" cy="113" r="2" fill="#fff"/>
+      </g>
+      <!-- GLASSES -->
+      <g id="glasses" style="display:none" fill="none" stroke="#2B2722" stroke-width="3.5"></g>
+      <!-- NOSE -->
+      <path d="M118 128 Q114 138 120 140" fill="none" stroke="#C99A74" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- MOUTH -->
+      <g id="mouth"></g>
+      <!-- FRONT HAIR -->
+      <path id="hairFront" d="" />
+      <!-- HAT -->
+      <g id="hat" style="display:none"></g>
+    </svg>
+  </div>
+  <div class="avatar-name" id="nameDisplay"></div>
+
+  <div class="panel">
+    <div class="row"><div class="row-label">Ten rengi</div><div class="swatches" id="skin">
+      <div class="swatch active" style="background:#F2D3B1" data-c="#F2D3B1" data-e="#E6B98E"></div>
+      <div class="swatch" style="background:#ECAD80" data-c="#ECAD80" data-e="#DDA070"></div>
+      <div class="swatch" style="background:#C68642" data-c="#C68642" data-e="#B5763A"></div>
+      <div class="swatch" style="background:#9E5622" data-c="#9E5622" data-e="#8C4A1E"></div>
+      <div class="swatch" style="background:#6B4226" data-c="#6B4226" data-e="#5C381F"></div></div></div>
+
+    <div class="row"><div class="row-label">Saç rengi</div><div class="swatches" id="hairColor">
+      <div class="swatch active" style="background:#2c1b18" data-c="#2c1b18"></div>
+      <div class="swatch" style="background:#0e0e0e" data-c="#0e0e0e"></div>
+      <div class="swatch" style="background:#724133" data-c="#724133"></div>
+      <div class="swatch" style="background:#b58143" data-c="#b58143"></div>
+      <div class="swatch" style="background:#d6b370" data-c="#d6b370"></div>
+      <div class="swatch" style="background:#b0413e" data-c="#b0413e"></div>
+      <div class="swatch" style="background:#c97fb3" data-c="#c97fb3"></div></div></div>
+
+    <div class="row"><div class="row-label">Saç stili</div><div class="opt-row" id="hairStyle">
+      <button class="opt active" data-s="long">Uzun düz</button>
+      <button class="opt" data-s="wavy">Dalgalı</button>
+      <button class="opt" data-s="pony">At kuyruğu</button>
+      <button class="opt" data-s="bun">Topuz</button>
+      <button class="opt" data-s="bob">Bob</button>
+      <button class="opt" data-s="short">Kısa</button>
+      <button class="opt" data-s="curly">Kıvırcık</button></div></div>
+
+    <div class="row"><div class="row-label">Kıyafet</div><div class="opt-row" id="clothType">
+      <button class="opt active" data-t="tshirt">Tişört</button>
+      <button class="opt" data-t="marin">Marinière</button>
+      <button class="opt" data-t="blazer">Blazer</button>
+      <button class="opt" data-t="trench">Trençkot</button>
+      <button class="opt" data-t="dress">Elbise</button></div></div>
+
+    <div class="row"><div class="row-label">Kıyafet rengi</div><div class="swatches" id="clothColor">
+      <div class="swatch active" style="background:#2E5A6B" data-c="#2E5A6B"></div>
+      <div class="swatch" style="background:#C4452F" data-c="#C4452F"></div>
+      <div class="swatch" style="background:#D9A441" data-c="#D9A441"></div>
+      <div class="swatch" style="background:#4A7C59" data-c="#4A7C59"></div>
+      <div class="swatch" style="background:#2B2722" data-c="#2B2722"></div>
+      <div class="swatch" style="background:#C97FB3" data-c="#C97FB3"></div></div></div>
+
+    <div class="row"><div class="row-label">Ruj</div><div class="swatches" id="lipColor">
+      <div class="swatch active" style="background:#C4604F" data-c="#C4604F"></div>
+      <div class="swatch" style="background:#A83232" data-c="#A83232"></div>
+      <div class="swatch" style="background:#D16B7C" data-c="#D16B7C"></div>
+      <div class="swatch" style="background:#8C4A3A" data-c="#8C4A3A"></div></div></div>
+
+    <div class="row"><div class="row-label">Gözlük</div><div class="opt-row" id="glassesOpt">
+      <button class="opt active" data-g="off">Yok</button>
+      <button class="opt" data-g="round">Yuvarlak</button>
+      <button class="opt" data-g="square">Kare</button></div></div>
+
+    <div class="row"><div class="row-label">Küpe</div><div class="opt-row" id="earOpt">
+      <button class="opt active" data-e="off">Yok</button>
+      <button class="opt" data-e="on">Var</button></div></div>
+
+    <div class="row"><div class="row-label">Şapka / Bere</div><div class="opt-row" id="hatOpt">
+      <button class="opt active" data-h="off">Yok</button>
+      <button class="opt" data-h="beret">Bere</button></div></div>
+
+    <div class="row"><div class="row-label">İsmin</div>
+      <input class="name-input" id="nameInput" placeholder="Örn. Tuğba" maxlength="20"></div>
+  </div>
+
+  <button class="cta" id="go">C'est parti &rarr; Fransa'ya git</button>
+  <p class="note">Bu sürüm tamamen kendi içinde çizilir — sunucu, internet, harici görsel yok. Senin "tek dosya" tercihinle uyumlu.</p>
+
+<script>
+  const S={ skin:'#F2D3B1', ear:'#E6B98E', hairCol:'#2c1b18', hairStyle:'long',
+    cloth:'tshirt', clothCol:'#2E5A6B', lip:'#C4604F', glasses:'off', ear2:'off', hat:'off',
+    brow:'soft', mouthV:'smile' };
+
+  const $=id=>document.getElementById(id);
+  const head=$('head'),neck=$('neck'),earL=$('earL'),earR=$('earR'),
+    hairFront=$('hairFront'),hairBack=$('hairBack'),clothing=$('clothing'),
+    glasses=$('glasses'),earrings=$('earrings'),hat=$('hat'),brows=$('brows'),mouth=$('mouth');
+
+  // ---------- HAIR ----------
+  const hairFrontPaths={
+    long:  "M48 118 Q44 40 120 40 Q196 40 192 118 Q190 78 120 72 Q50 78 48 118 Z",
+    wavy:  "M48 118 Q40 38 120 40 Q200 38 192 118 Q196 80 175 78 Q185 64 120 66 Q55 64 65 78 Q44 80 48 118 Z",
+    pony:  "M52 116 Q48 44 120 44 Q192 44 188 116 Q188 80 120 74 Q52 80 52 116 Z",
+    bun:   "M52 116 Q48 44 120 44 Q192 44 188 116 Q188 80 120 74 Q52 80 52 116 Z",
+    bob:   "M46 140 Q42 42 120 40 Q198 42 194 140 Q190 84 120 78 Q50 84 46 140 Z",
+    short: "M52 110 Q50 46 120 46 Q190 46 188 110 Q188 76 120 70 Q52 76 52 110 Z",
+    curly: "M46 120 Q36 40 120 38 Q204 40 194 120 Q200 76 120 70 Q40 76 46 120 Z"
+  };
+  const hairBackPaths={
+    long:  "M44 100 Q36 210 80 214 Q66 160 66 110 L174 110 Q174 160 160 214 Q204 210 196 100 Z",
+    wavy:  "M42 100 Q30 195 78 212 Q66 200 70 175 Q58 195 84 200 Q70 155 70 110 L170 110 Q170 155 156 200 Q182 195 170 175 Q174 200 162 212 Q210 195 198 100 Z",
+    pony:  "M186 86 Q224 118 210 180 Q202 214 184 188 Q198 150 184 110 Z",
+    bun:   "",
+    bob:   "",
+    short: "",
+    curly: "M40 110 Q28 180 82 192 Q60 180 68 150 L172 150 Q180 180 158 192 Q212 180 200 110 Z"
+  };
+  const hairFrontGloss = {
+    curly: "M70 70 a14 14 0 1 0 0.1 0 M120 64 a14 14 0 1 0 0.1 0 M170 70 a14 14 0 1 0 0.1 0"
+  };
+
+  function renderHair(){
+    hairBack.setAttribute('d', hairBackPaths[S.hairStyle]||'');
+    hairBack.setAttribute('fill', S.hairCol);
+    hairFront.setAttribute('d', hairFrontPaths[S.hairStyle]||'');
+    hairFront.setAttribute('fill', S.hairCol);
+    // bun knob
+    let knob=$('bunKnob');
+    if(S.hairStyle==='bun'){
+      if(!knob){knob=document.createElementNS('http://www.w3.org/2000/svg','circle');knob.id='bunKnob';
+        $('avatar').insertBefore(knob, hairFront);}
+      knob.setAttribute('cx',120);knob.setAttribute('cy',38);knob.setAttribute('r',20);knob.setAttribute('fill',S.hairCol);
+    } else if(knob){knob.remove();}
+    // pony tie
+    let tie=$('ponyTie');
+    if(S.hairStyle==='pony'){
+      if(!tie){tie=document.createElementNS('http://www.w3.org/2000/svg','circle');tie.id='ponyTie';
+        $('avatar').appendChild(tie);}
+      tie.setAttribute('cx',190);tie.setAttribute('cy',96);tie.setAttribute('r',7);tie.setAttribute('fill','#00000033');
+    } else if(tie){tie.remove();}
+  }
+
+  // ---------- CLOTHING ----------
+  function renderClothing(){
+    const c=S.clothCol; let svg='';
+    if(S.cloth==='tshirt'){
+      svg=`<path d="M62 240 Q60 196 120 184 Q180 196 178 240 Z" fill="${c}"/>`;
+    } else if(S.cloth==='marin'){
+      svg=`<path d="M62 240 Q60 196 120 184 Q180 196 178 240 Z" fill="#F0EDE4"/>
+        <clipPath id="mc"><path d="M62 240 Q60 196 120 184 Q180 196 178 240 Z"/></clipPath>
+        <g clip-path="url(#mc)">
+          <rect x="55" y="196" width="130" height="7" fill="#2E5A6B"/>
+          <rect x="55" y="211" width="130" height="7" fill="#2E5A6B"/>
+          <rect x="55" y="226" width="130" height="7" fill="#2E5A6B"/></g>`;
+    } else if(S.cloth==='blazer'){
+      svg=`<path d="M62 240 Q60 196 120 184 Q180 196 178 240 Z" fill="${c}"/>
+        <path d="M120 184 L100 240 L120 218 L140 240 Z" fill="#F2EEE4"/>
+        <path d="M120 184 L96 206 M120 184 L144 206" stroke="rgba(0,0,0,0.22)" stroke-width="2.5" fill="none"/>`;
+    } else if(S.cloth==='trench'){
+      svg=`<path d="M58 240 Q58 192 120 182 Q182 192 182 240 Z" fill="#D9C7A8"/>
+        <line x1="120" y1="186" x2="120" y2="240" stroke="rgba(0,0,0,0.18)" stroke-width="2.5"/>
+        <circle cx="108" cy="210" r="2.5" fill="rgba(0,0,0,0.3)"/>
+        <circle cx="108" cy="226" r="2.5" fill="rgba(0,0,0,0.3)"/>
+        <path d="M92 188 L120 200 L148 188" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="2.5"/>`;
+    } else if(S.cloth==='dress'){
+      svg=`<path d="M66 240 Q70 192 120 184 Q170 192 174 240 Z" fill="${c}"/>
+        <path d="M120 184 L120 240" stroke="rgba(255,255,255,0.18)" stroke-width="3"/>`;
+    }
+    clothing.innerHTML=svg;
+  }
+
+  function renderBrows(){
+    brows.innerHTML=`<path d="M80 98 Q95 92 110 98"/><path d="M130 98 Q145 92 160 98"/>`;
+    brows.setAttribute('stroke', shade(S.hairCol));
+  }
+  function renderMouth(){
+    mouth.innerHTML=`<path d="M104 152 Q120 166 136 152 Q120 160 104 152 Z" fill="${S.lip}"/>`;
+  }
+  function shade(hex){
+    // hair-based brow color, slightly darker
+    return hex;
+  }
+
+  function setActive(c,el){ c.querySelectorAll('.active').forEach(n=>n.classList.remove('active')); el.classList.add('active'); }
+
+  $('skin').addEventListener('click',e=>{ if(!e.target.dataset.c)return;
+    S.skin=e.target.dataset.c; S.ear=e.target.dataset.e;
+    head.setAttribute('fill',S.skin); neck.setAttribute('fill',S.ear);
+    earL.setAttribute('fill',S.ear); earR.setAttribute('fill',S.ear);
+    setActive(e.currentTarget,e.target); });
+
+  $('hairColor').addEventListener('click',e=>{ if(!e.target.dataset.c)return;
+    S.hairCol=e.target.dataset.c; renderHair(); renderBrows(); setActive(e.currentTarget,e.target); });
+
+  $('hairStyle').addEventListener('click',e=>{ if(!e.target.dataset.s)return;
+    S.hairStyle=e.target.dataset.s; renderHair(); setActive(e.currentTarget,e.target); });
+
+  $('clothType').addEventListener('click',e=>{ if(!e.target.dataset.t)return;
+    S.cloth=e.target.dataset.t; renderClothing(); setActive(e.currentTarget,e.target); });
+
+  $('clothColor').addEventListener('click',e=>{ if(!e.target.dataset.c)return;
+    S.clothCol=e.target.dataset.c; renderClothing(); setActive(e.currentTarget,e.target); });
+
+  $('lipColor').addEventListener('click',e=>{ if(!e.target.dataset.c)return;
+    S.lip=e.target.dataset.c; renderMouth(); setActive(e.currentTarget,e.target); });
+
+  $('glassesOpt').addEventListener('click',e=>{ if(!e.target.dataset.g)return;
+    const g=e.target.dataset.g;
+    if(g==='off'){ glasses.style.display='none'; }
+    else if(g==='round'){ glasses.style.display='block';
+      glasses.innerHTML=`<circle cx="95" cy="116" r="18"/><circle cx="145" cy="116" r="18"/><line x1="113" y1="116" x2="127" y2="116"/>`; }
+    else if(g==='square'){ glasses.style.display='block';
+      glasses.innerHTML=`<rect x="78" y="102" width="34" height="28" rx="5"/><rect x="128" y="102" width="34" height="28" rx="5"/><line x1="112" y1="116" x2="128" y2="116"/>`; }
+    setActive(e.currentTarget,e.target); });
+
+  $('earOpt').addEventListener('click',e=>{ if(!e.target.dataset.e)return;
+    earrings.style.display=e.target.dataset.e==='on'?'block':'none'; setActive(e.currentTarget,e.target); });
+
+  $('hatOpt').addEventListener('click',e=>{ if(!e.target.dataset.h)return;
+    if(e.target.dataset.h==='off'){ hat.style.display='none'; }
+    else { hat.style.display='block';
+      hat.innerHTML=`<ellipse cx="120" cy="50" rx="62" ry="26" fill="#C4452F"/>
+        <ellipse cx="120" cy="44" rx="52" ry="20" fill="#A83926"/>
+        <circle cx="145" cy="34" r="6" fill="#8B2A1E"/>`; }
+    setActive(e.currentTarget,e.target); });
+
+  $('nameInput').addEventListener('input',()=>{ $('nameDisplay').textContent=$('nameInput').value?`« ${$('nameInput').value} »`:''; });
+  $('go').addEventListener('click',()=>{ const n=$('nameInput').value||'voyageur';
+    alert(`Bienvenue ${n} ! 🇫🇷\n\n(Sıradaki: otel odası.)`); });
+
+  renderHair(); renderClothing(); renderBrows(); renderMouth();
+</script>
+</body> 
+</html>
