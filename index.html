@@ -100,7 +100,19 @@
 
   /* ===== GLOBAL PARA BARI ===== */
   #moneyBar { position:fixed; top:0; left:0; right:0; z-index:80; display:flex; justify-content:space-between; align-items:center; padding:8px 16px; background:rgba(247,242,234,0.92); backdrop-filter:blur(8px); border-bottom:1.5px solid rgba(201,162,75,0.5); pointer-events:none; }
-  #moneyBar .wallet { font-family:'Fraunces',serif; font-size:17px; font-weight:600; color:#3A3530; display:flex; align-items:center; gap:5px; background:#fff; padding:5px 13px; border-radius:999px; border:1.5px solid #C9A24B; box-shadow:0 2px 6px rgba(0,0,0,0.08); pointer-events:auto; }
+  #moneyBar .wallet { font-family:'Fraunces',serif; font-size:17px; font-weight:600; color:#3A3530; display:flex; align-items:center; gap:5px; background:#fff; padding:5px 13px; border-radius:999px; border:1.5px solid #C9A24B; box-shadow:0 2px 6px rgba(0,0,0,0.08); pointer-events:auto; cursor:pointer; transition:transform .1s; }
+  #moneyBar .wallet:active { transform:scale(0.95); }
+  /* cüzdan kartı içeriği */
+  .wallet-balance { text-align:center; font-family:'Fraunces',serif; font-size:42px; font-weight:700; color:#5B8C5A; margin:6px 0 2px; }
+  .wallet-balance-label { text-align:center; font-size:13px; color:#8A7E6E; margin-bottom:18px; }
+  .wallet-tx-title { font-size:12px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600; color:#9A8E7E; margin-bottom:10px; }
+  .wallet-tx { display:flex; justify-content:space-between; align-items:center; padding:9px 0; border-bottom:1px solid #ECE3D4; font-size:14px; }
+  .wallet-tx:last-child { border-bottom:none; }
+  .wallet-tx .tx-label { color:#4a443c; }
+  .wallet-tx .tx-amt { font-weight:700; font-family:'Fraunces'; }
+  .wallet-tx .tx-amt.plus { color:#5B8C5A; }
+  .wallet-tx .tx-amt.minus { color:#B8553F; }
+  .wallet-empty { text-align:center; color:#A99; font-size:13px; padding:14px 0; }
   #moneyBar .wallet .amt { color:#5B8C5A; transition:transform .2s; }
   #moneyBar .wallet .amt.bump { transform:scale(1.35); }
   #moneyBar.hidden { display:none; }
@@ -175,8 +187,12 @@
 
 <!-- ============ GLOBAL PARA BARI ============ -->
 <div id="moneyBar" class="hidden">
-  <div class="wallet"><span>💶</span><span class="amt" id="walletAmt">0</span><span style="color:#8A7E6E;font-size:14px;">€</span></div>
+  <button class="wallet" id="walletBtn"><span>👛</span><span class="amt" id="walletAmt">0</span><span style="color:#8A7E6E;font-size:14px;">€</span></button>
   <div style="pointer-events:none;"></div>
+</div>
+<!-- cüzdan kartı -->
+<div class="overlay" id="ovWallet" style="z-index:95;">
+  <div class="card" id="walletCard"></div>
 </div>
 
 <!-- ============ AVATAR SCREEN ============ -->
@@ -281,7 +297,6 @@
   <div class="zone" id="zTelefon" style="left:55%; top:48%; width:22%; height:16%;"><span class="ztag">Le téléphone</span></div>
   <div class="zone" id="zValiz"  style="left:70%; top:64%; width:28%; height:30%;"><span class="ztag">La valise</span></div>
   <div class="nav">
-    <button class="navbtn" id="zJouer">🎮 Jouer</button>
     <button class="navbtn primary" id="zKapi">Sortir → La ville</button>
   </div>
   <div class="overlay" id="ovHotel"><div class="card" id="cardHotel"></div></div>
@@ -665,7 +680,6 @@ $('zPencere').addEventListener('click',function(){openHotel('pencere');});
 $('zTelefon').addEventListener('click',function(){openHotel('telefon');});
 $('zValiz').addEventListener('click',function(){ $('go').textContent='✓ Retour à la chambre'; show('avatarScreen'); });
 $('zKapi').addEventListener('click',function(){show('streetScreen');});
-$('zJouer').addEventListener('click',function(){ openGame(); });
 document.getElementById('ovHotel').addEventListener('click',function(e){ if(e.target.id==='ovHotel') document.getElementById('ovHotel').classList.remove('show'); });
 
 /* ---- STREET navigation ---- */
@@ -679,6 +693,7 @@ var venues={
     char:'D497B5C2-57A4-4635-8584-D3255158E88A.png', charName:'Julien', hasChat:true,
     p:'Sıcacık bir kafe. Garson Julien birazdan seninle konuşacak — kahveni alabilir, hava durumundan sohbet edebilir.' },
   firin:{ img:'5A0EA8A0-E10D-4395-943F-BA555A1E8CED.png', name:'Boulangerie Margot', e:'La boulangerie · Fırın', fr:'« Une baguette ! »',
+    char:'A6BB9323-A1BA-4B34-944A-4B970444EBD6.png', charName:'Margot', hasChat:true,
     p:'Taze ekmek kokusu. Fırıncı Margot güler yüzlü — baget, kruvasan, pain au chocolat sipariş edebilirsin.' },
   kitapci:{ img:'D62FC151-9AD5-4796-920C-4CFD3C33FA17.png', name:'Librairie du Coin', e:'La librairie · Kitapçı', fr:'« Vous cherchez un livre ? »',
     p:'Tavana kadar kitap dolu sıcak bir dükkân. Sahibi sana bir kitap önerebilir.' },
@@ -720,6 +735,7 @@ $('venueBack').addEventListener('click',function(){
 $('venueTalk').addEventListener('click',function(){
   var v=venues[currentVenue];
   if(v.hasChat && currentVenue==='kafe'){ startCafeChat(); return; }
+  if(v.hasChat && currentVenue==='firin'){ startBakeryChat(); return; }
   // diğer mekanlar: yakında
   document.getElementById('cardVenue').innerHTML='<div class="eyebrow2">'+v.e+'</div><h2>'+v.name+' <span class="soon">Bientôt</span></h2><div class="fr">'+v.fr+'</div><p>'+v.p+'</p><p style="color:#8A7E6E;">Bu mekânın karakteri ve sohbeti yakında eklenecek. 🇫🇷</p><div class="actions"><button class="btn primary" id="vOk">Tamam</button></div>';
   document.getElementById('ovVenue').classList.add('show');
@@ -842,7 +858,7 @@ function renderCafe(key){
       if(b.dataset.order){ cafeMem.lastOrder=b.dataset.order; saveCafeMem(cafeMem); }
       if(b.dataset.go==='__pay'){
         var amt=parseInt(b.dataset.pay,10)||0;
-        setWallet(getWallet()-amt); bumpWallet();
+        spend('Café de Flore', amt);
         renderCafe('paid');
         return;
       }
@@ -855,11 +871,180 @@ function renderCafe(key){
   if(cr) cr.addEventListener('click',function(){ renderCafe('start'); });
 }
 
-/* ============ CÜZDAN ============ */
-function getWallet(){ try{ return parseInt(localStorage.getItem('vef_wallet')||'0',10);}catch(e){return 0;} }
+/* ====== FIRIN — HAFIZALI DİYALOG (Margot) ====== */
+var BAKERY_MEM='vef_bakery_margot';
+function loadBakeryMem(){ try{ return JSON.parse(localStorage.getItem(BAKERY_MEM))||{visits:0,lastItem:null}; }catch(e){ return {visits:0,lastItem:null}; } }
+function saveBakeryMem(m){ try{ localStorage.setItem(BAKERY_MEM, JSON.stringify(m)); }catch(e){} }
+var bakeryMem, bakeryNodes, bakeryUser, bakeryCart;
+var BAKERY_ITEMS={
+  baguette:{ fr:'une baguette', tr:'baget', price:1 },
+  croissant:{ fr:'un croissant', tr:'kruvasan', price:2 },
+  painchoc:{ fr:'un pain au chocolat', tr:'çikolatalı ekmek', price:2 },
+  tarte:{ fr:'une tarte', tr:'tart', price:4 },
+  macaron:{ fr:'un macaron', tr:'makaron', price:2 },
+  pain:{ fr:'un pain', tr:'somun ekmek', price:3 }
+};
+
+function startBakeryChat(){
+  bakeryMem=loadBakeryMem();
+  bakeryUser=getUserName();
+  bakeryMem.visits+=1; saveBakeryMem(bakeryMem);
+  bakeryCart=null;
+  var vb=document.getElementById('visitBadge');
+  vb.textContent=bakeryMem.visits+'. ziyaret'; vb.classList.add('show');
+  document.getElementById('venueNav').style.display='none';
+  bakeryNodes=buildBakeryNodes();
+  renderBakery('start');
+  document.getElementById('dbox').classList.add('show');
+}
+
+function buildBakeryNodes(){
+  var openLine, openHelp, startChoices;
+  if(bakeryMem.visits===1){
+    openLine='Bonjour ! Bienvenue à la boulangerie. 😊';
+    openHelp='Merhaba! Fırına hoş geldiniz. — İlk ziyaretin, Margot seni yeni tanıyor.';
+    startChoices=[ { fr:'Bonjour !', help:'Merhaba!', go:'choose' }, { fr:'Bonjour madame !', help:'Merhaba hanımefendi! (kibar)', go:'choose' } ];
+  } else if(bakeryMem.visits===2){
+    openLine='Ah, '+bakeryUser+' ! Rebonjour ! 😄';
+    openHelp='Ah, '+bakeryUser+'! Tekrar merhaba! — Margot seni hatırladı.';
+    startChoices=[ { fr:'Bonjour Margot !', help:'Merhaba Margot!', go:'choose' } ];
+  } else {
+    if(bakeryMem.lastItem){
+      openLine='Bonjour '+bakeryUser+' ! '+cap(BAKERY_ITEMS[bakeryMem.lastItem].fr)+' comme d\'habitude ? 😊';
+      openHelp='Merhaba '+bakeryUser+'! Her zamanki gibi '+BAKERY_ITEMS[bakeryMem.lastItem].tr+' mı? — Margot geçen aldığını hatırlıyor.';
+      startChoices=[
+        { fr:'Oui, comme d\'habitude !', help:'Evet, her zamanki gibi!', go:'__usual' },
+        { fr:'Non, autre chose.', help:'Hayır, başka bir şey.', go:'choose' }
+      ];
+    } else {
+      openLine='Bonjour '+bakeryUser+' ! Qu\'est-ce que je vous sers ? 😊';
+      openHelp='Merhaba '+bakeryUser+'! Size ne vereyim?';
+      startChoices=[ { fr:'Bonjour Margot !', help:'Merhaba Margot!', go:'choose' } ];
+    }
+  }
+  // ürün seçim seçenekleri
+  var itemChoices=Object.keys(BAKERY_ITEMS).map(function(k){
+    var it=BAKERY_ITEMS[k];
+    return { fr:cap(it.fr)+', s\'il vous plaît.', help:it.tr+' ('+it.price+'€)', go:'__pick', item:k };
+  });
+  return {
+    start:{ speaker:'Margot', line:openLine, help:openHelp, choices:startChoices },
+    choose:{ speaker:'Margot', line:'Qu\'est-ce que vous voulez ? 🥐', help:'Ne istersiniz? — aşağıdan seç', choices:itemChoices },
+    confirm:{ speaker:'Margot', dynamic:'confirm', choices:[] },
+    addition:{ speaker:'Margot', dynamic:'addition', choices:[] },
+    paid:{ speaker:'Margot', line:'Merci '+bakeryUser+' ! Bonne journée. 😊', help:'Teşekkürler '+bakeryUser+'! İyi günler.',
+      choices:[ { fr:'Au revoir !', help:'Hoşça kalın!', go:'end' } ] },
+    noMoney:{ speaker:'Margot', dynamic:'noMoney', choices:[] },
+    end:{ speaker:'Margot', line:'Au revoir, et à bientôt ! 👋', help:'Hoşça kalın, yakında görüşürüz!', choices:[], final:true }
+  };
+}
+function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+
+function renderBakery(key){
+  var n=bakeryNodes[key];
+  var dbox=document.getElementById('dbox');
+  // özel akışlar
+  if(key==='__usual'){ bakeryCart=bakeryMem.lastItem; renderBakery('addition'); return; }
+  if(key==='__pick'){ /* handled in click */ }
+  if(n && n.dynamic==='confirm'){
+    var it=BAKERY_ITEMS[bakeryCart];
+    n=JSON.parse(JSON.stringify(n));
+    n.line='Très bon choix ! '+cap(it.fr)+'. 😊';
+    n.help='Çok güzel seçim! '+it.tr+'.';
+    n.choices=[ { fr:'L\'addition, s\'il vous plaît.', help:'Hesap, lütfen.', go:'addition' } ];
+  } else if(n && n.dynamic==='addition'){
+    var it2=BAKERY_ITEMS[bakeryCart]; var price=it2.price; var have=getWallet();
+    n=JSON.parse(JSON.stringify(n));
+    n.line='Ça fait '+price+' euro'+(price>1?'s':'')+'. 💶';
+    n.help=price+' euro ediyor. — Cüzdanında '+have+'€ var.';
+    if(have>=price){
+      n.choices=[ { fr:'Voilà, '+price+' euro'+(price>1?'s':'')+'.', help:'Buyurun, '+price+' euro. (öde)', go:'__pay', payAmount:price } ];
+    } else {
+      n.choices=[ { fr:'Je n\'ai pas assez… 😟', help:'Yeterli param yok… (oyun oynayıp kazan)', go:'noMoney' } ];
+    }
+  } else if(n && n.dynamic==='noMoney'){
+    n=JSON.parse(JSON.stringify(n));
+    n.line='Ce n\'est pas grave, à la prochaine ! 😊';
+    n.help='Önemli değil, bir dahaki sefere! — Euro için 👛 cüzdandan 🎮 Jouer ile oyna.';
+    n.choices=[ { fr:'Merci, au revoir.', help:'Teşekkürler, hoşça kalın.', go:'end' } ];
+  }
+  var html='<div class="speaker">💬 '+n.speaker+'</div>';
+  html+='<div class="line">'+n.line+'</div>';
+  html+='<div class="help-row"><button class="help-btn" onclick="this.nextElementSibling.classList.toggle(\'show\')">? Anlamı</button><div class="help-text">'+n.help+'</div></div>';
+  if(n.final){
+    html+='<button class="dfinish" id="bakeryFinish">✓ Terminé</button>';
+    html+='<button class="drestart" id="bakeryRestart">Baştan konuş</button>';
+  } else {
+    html+='<div class="choices">';
+    n.choices.forEach(function(c){
+      html+='<button class="choice" data-go="'+c.go+'"'+(c.item?(' data-item="'+c.item+'"'):'')+(c.payAmount?(' data-pay="'+c.payAmount+'"'):'')+'>'+
+        '<span class="qmark" onclick="event.stopPropagation(); this.parentElement.classList.toggle(\'reveal\')">?</span>'+
+        '<div class="c-fr">'+c.fr+'</div><div class="c-help">'+c.help+'</div></button>';
+    });
+    html+='</div>';
+  }
+  dbox.innerHTML=html;
+  dbox.querySelectorAll('.choice').forEach(function(b){
+    b.addEventListener('click',function(){
+      if(b.dataset.go==='__pick'){
+        bakeryCart=b.dataset.item; bakeryMem.lastItem=bakeryCart; saveBakeryMem(bakeryMem);
+        renderBakery('confirm'); return;
+      }
+      if(b.dataset.go==='__pay'){
+        var amt=parseInt(b.dataset.pay,10)||0;
+        spend('Boulangerie Margot', amt);
+        renderBakery('paid'); return;
+      }
+      renderBakery(b.dataset.go);
+    });
+  });
+  var bf=document.getElementById('bakeryFinish');
+  if(bf) bf.addEventListener('click',function(){ dbox.classList.remove('show'); document.getElementById('venueNav').style.display='flex'; });
+  var br=document.getElementById('bakeryRestart');
+  if(br) br.addEventListener('click',function(){ renderBakery('start'); });
+}
+
+
 function setWallet(v){ try{ localStorage.setItem('vef_wallet',String(v)); }catch(e){} renderWallet(); }
 function renderWallet(){ var a=document.getElementById('walletAmt'); if(a) a.textContent=getWallet(); }
 function bumpWallet(){ var a=document.getElementById('walletAmt'); if(a){ a.classList.add('bump'); setTimeout(function(){a.classList.remove('bump');},200);} }
+
+/* işlem geçmişi (son 8) */
+function getTx(){ try{ return JSON.parse(localStorage.getItem('vef_tx')||'[]'); }catch(e){ return []; } }
+function addTx(label, amount){
+  var tx=getTx();
+  tx.unshift({ label:label, amount:amount });
+  tx=tx.slice(0,8);
+  try{ localStorage.setItem('vef_tx', JSON.stringify(tx)); }catch(e){}
+}
+/* para ekleme/çıkarma kısayolları (işlem kaydıyla) */
+function earn(label, amt){ setWallet(getWallet()+amt); addTx(label, amt); bumpWallet(); }
+function spend(label, amt){ setWallet(getWallet()-amt); addTx(label, -amt); bumpWallet(); }
+
+/* cüzdan kartı */
+function openWallet(){
+  var bal=getWallet(); var tx=getTx();
+  var html='<div class="eyebrow2">Mon portefeuille · Cüzdanım</div>';
+  html+='<div class="wallet-balance">'+bal+' €</div>';
+  html+='<div class="wallet-balance-label">mevcut bakiyen</div>';
+  html+='<div class="wallet-tx-title">Son işlemler</div>';
+  if(tx.length===0){
+    html+='<div class="wallet-empty">Henüz işlem yok. 🎮 Jouer ile euro kazan!</div>';
+  } else {
+    tx.forEach(function(t){
+      var sign=t.amount>=0?'plus':'minus';
+      var txt=(t.amount>=0?'+':'')+t.amount+' €';
+      html+='<div class="wallet-tx"><span class="tx-label">'+t.label+'</span><span class="tx-amt '+sign+'">'+txt+'</span></div>';
+    });
+  }
+  html+='<div class="actions" style="margin-top:20px;"><button class="btn" id="wClose">Kapat</button><button class="btn primary" id="wPlay">🎮 Jouer</button></div>';
+  document.getElementById('walletCard').innerHTML=html;
+  document.getElementById('ovWallet').classList.add('show');
+  document.getElementById('wClose').addEventListener('click',function(){ document.getElementById('ovWallet').classList.remove('show'); });
+  document.getElementById('wPlay').addEventListener('click',function(){ document.getElementById('ovWallet').classList.remove('show'); openGame(); });
+}
+document.getElementById('walletBtn').addEventListener('click',openWallet);
+document.getElementById('ovWallet').addEventListener('click',function(e){ if(e.target.id==='ovWallet') document.getElementById('ovWallet').classList.remove('show'); });
 
 /* ============ KELİME OYUNU ============ */
 var G_EARN=2, G_PAIRS=4;
@@ -927,7 +1112,7 @@ function gSelTrFn(el){
   if(!gSelFr){ gToast('Önce Fransızca kelimeyi seç 🇫🇷'); return; }
   if(el.dataset.id===gSelFr.dataset.id){
     el.classList.add('matched'); gSelFr.classList.add('matched'); gSelFr.classList.remove('selected'); gSelFr=null;
-    gMatched++; gEarned+=G_EARN; setWallet(getWallet()+G_EARN); bumpWallet();
+    gMatched++; gEarned+=G_EARN; earn('Kelime oyunu', G_EARN);
     gToast('Bravo ! +'+G_EARN+'€',true);
     document.getElementById('gprogress').textContent=gMatched+' / '+gRoundPairs.length+' eşleşti';
     if(gMatched===gRoundPairs.length) gRoundDone();
