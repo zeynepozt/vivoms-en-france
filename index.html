@@ -98,6 +98,52 @@
   .btn.primary { background:#B8553F; color:#fff; border-color:#B8553F; }
   .soon { display:inline-block; font-size:11px; background:#C9A24B; color:#fff; padding:3px 8px; border-radius:999px; margin-left:6px; font-weight:600; }
 
+  /* ===== GLOBAL PARA BARI ===== */
+  #moneyBar { position:fixed; top:0; left:0; right:0; z-index:80; display:flex; justify-content:space-between; align-items:center; padding:8px 16px; background:rgba(247,242,234,0.92); backdrop-filter:blur(8px); border-bottom:1.5px solid rgba(201,162,75,0.5); pointer-events:none; }
+  #moneyBar .wallet { font-family:'Fraunces',serif; font-size:17px; font-weight:600; color:#3A3530; display:flex; align-items:center; gap:5px; background:#fff; padding:5px 13px; border-radius:999px; border:1.5px solid #C9A24B; box-shadow:0 2px 6px rgba(0,0,0,0.08); pointer-events:auto; }
+  #moneyBar .wallet .amt { color:#5B8C5A; transition:transform .2s; }
+  #moneyBar .wallet .amt.bump { transform:scale(1.35); }
+  #moneyBar.hidden { display:none; }
+
+  /* ===== GAME SCREEN ===== */
+  #gameScreen { min-height:100vh; display:none; flex-direction:column; align-items:center; padding:54px 0 50px; background:var(--paper); background-image:radial-gradient(circle at 1px 1px, rgba(58,53,48,0.04) 1px, transparent 0); background-size:22px 22px; }
+  #gameScreen.active { display:flex; }
+  .g-head { text-align:center; padding:8px 16px; }
+  .g-head .eyebrow { font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:var(--rouge); font-weight:600; }
+  .g-head h1 { font-family:'Fraunces',serif; font-size:25px; font-weight:600; margin-top:4px; }
+  .g-head .sub { font-size:13px; color:#8A7E6E; margin-top:4px; }
+  .levels { display:flex; gap:8px; justify-content:center; padding:10px 16px 6px; }
+  .lvl-btn { padding:8px 20px; border:2px solid var(--line); border-radius:999px; background:#fff; font-family:'DM Sans'; font-size:14px; font-weight:700; cursor:pointer; }
+  .lvl-btn.active { background:var(--rouge); color:#fff; border-color:var(--rouge); }
+  .sets { display:flex; gap:7px; flex-wrap:wrap; justify-content:center; padding:8px 16px 14px; max-width:640px; }
+  .set-btn { padding:7px 12px; border:2px solid var(--line); border-radius:999px; background:#fff; font-family:'DM Sans'; font-size:12px; font-weight:600; cursor:pointer; }
+  .set-btn.active { background:var(--ink); color:var(--paper); border-color:var(--ink); }
+  .board-wrap { max-width:520px; width:100%; padding:0 16px; }
+  .progress { text-align:center; font-size:13px; color:#9A8E7E; margin:8px 0 10px; }
+  .gboard { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .col-title { font-size:12px; letter-spacing:0.1em; text-transform:uppercase; font-weight:600; color:#9A8E7E; text-align:center; margin-bottom:8px; }
+  .gcol { display:flex; flex-direction:column; gap:9px; }
+  .gword { padding:14px 10px; border:2px solid var(--line); border-radius:14px; background:#fff; font-size:15px; font-weight:600; text-align:center; cursor:pointer; transition:all .14s; user-select:none; }
+  .gword.fr { font-family:'Fraunces',serif; }
+  .gword.selected { background:var(--gold); color:#fff; border-color:var(--gold); transform:scale(1.03); }
+  .gword.matched { background:#E4EFE2; border-color:var(--green); color:var(--green); opacity:0.65; pointer-events:none; }
+  .gword.wrong { background:#F4D9D2; border-color:var(--rouge); animation:shake .35s; }
+  @keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-6px);} 75%{transform:translateX(6px);} }
+  .gtoast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--ink); color:var(--paper); padding:12px 22px; border-radius:999px; font-weight:600; font-size:15px; opacity:0; transition:all .3s; z-index:90; pointer-events:none; }
+  .gtoast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  .gtoast.win { background:var(--green); }
+  .gdone { max-width:400px; margin:18px auto; background:#fff; border:2px solid var(--gold); border-radius:20px; padding:24px 20px; text-align:center; box-shadow:5px 5px 0 rgba(58,53,48,0.1); display:none; }
+  .gdone.show { display:block; }
+  .gdone h2 { font-family:'Fraunces',serif; font-size:23px; margin-bottom:6px; }
+  .gdone .earned { font-size:30px; font-family:'Fraunces'; color:var(--green); font-weight:700; margin:8px 0; }
+  .gdone p { color:#8A7E6E; margin-bottom:14px; font-size:14px; }
+  .glimit { max-width:400px; margin:30px auto; background:#fff; border:2px solid var(--line); border-radius:20px; padding:30px 24px; text-align:center; display:none; }
+  .glimit.show { display:block; }
+  .glimit .big { font-size:40px; margin-bottom:10px; }
+  .glimit h2 { font-family:'Fraunces',serif; font-size:22px; margin-bottom:8px; }
+  .glimit p { color:#8A7E6E; font-size:14px; margin-bottom:8px; }
+  .g-back { margin-top:6px; }
+
   /* ===== CHARACTER + DIALOGUE ===== */
   .character-layer { position:absolute; left:50%; bottom:40%; transform:translateX(-50%); z-index:12; height:54%; max-height:480px; pointer-events:none; display:none; }
   .character-layer img { height:100%; width:auto; filter:drop-shadow(0 12px 24px rgba(0,0,0,0.35)); }
@@ -126,6 +172,12 @@
 </style>
 </head>
 <body>
+
+<!-- ============ GLOBAL PARA BARI ============ -->
+<div id="moneyBar" class="hidden">
+  <div class="wallet"><span>💶</span><span class="amt" id="walletAmt">0</span><span style="color:#8A7E6E;font-size:14px;">€</span></div>
+  <div style="pointer-events:none;"></div>
+</div>
 
 <!-- ============ AVATAR SCREEN ============ -->
 <div class="screen active" id="avatarScreen">
@@ -229,6 +281,7 @@
   <div class="zone" id="zTelefon" style="left:55%; top:48%; width:22%; height:16%;"><span class="ztag">Le téléphone</span></div>
   <div class="zone" id="zValiz"  style="left:70%; top:64%; width:28%; height:30%;"><span class="ztag">La valise</span></div>
   <div class="nav">
+    <button class="navbtn" id="zJouer">🎮 Jouer</button>
     <button class="navbtn primary" id="zKapi">Sortir → La ville</button>
   </div>
   <div class="overlay" id="ovHotel"><div class="card" id="cardHotel"></div></div>
@@ -281,6 +334,243 @@
   <div class="dbox" id="dbox"></div>
   <div class="overlay" id="ovVenue"><div class="card" id="cardVenue"></div></div>
 </div>
+
+<!-- ============ GAME SCREEN ============ -->
+<div class="screen" id="gameScreen">
+  <div class="g-head">
+    <div class="eyebrow">Jeu de mots</div>
+    <h1>Kelime Eşleştirme</h1>
+    <div class="sub">Eşleştir, euro kazan 💶 · Günde 1 set</div>
+  </div>
+  <div class="levels" id="levels"></div>
+  <div class="sets" id="sets"></div>
+  <div class="board-wrap">
+    <div class="progress" id="gprogress"></div>
+    <div class="gboard">
+      <div><div class="col-title">Français 🇫🇷</div><div class="gcol" id="colFr"></div></div>
+      <div><div class="col-title">Türkçe 🇹🇷</div><div class="gcol" id="colTr"></div></div>
+    </div>
+    <div class="gdone" id="gdone">
+      <h2>Bravo ! 🎉</h2>
+      <div class="earned" id="earnedTxt">+0 €</div>
+      <p id="gdoneSub"></p>
+      <button class="navbtn primary g-back" id="gameBackWin">← L'hôtel</button>
+    </div>
+    <div class="glimit" id="glimit">
+      <div class="big">⏳</div>
+      <h2>Bugünlük bitti!</h2>
+      <p>Günde bir set oynayabilirsin. Yarın yeni kelimeler seni bekliyor!</p>
+      <p style="color:#C9A24B;font-weight:600;">Yakında: 📺 reklam izle, bir hak daha kazan</p>
+      <button class="navbtn primary g-back" id="gameBackLimit">← L'hôtel</button>
+    </div>
+  </div>
+  <button class="navbtn g-back" id="gameBack" style="margin-top:10px;">← L'hôtel</button>
+  <div class="gtoast" id="gtoast"></div>
+</div>
+
+<script>
+/* ============ KELİME HAVUZU (400) ============ */
+/* ============================================================
+   FRANSIZCA A1-A2 KELİME HAVUZU — ~400 kelime
+   Günlük hayat odaklı, en sık kullanılan kelimeler.
+   Setler seviyeye göre: önce A1, sonra A2.
+   Format: ['fransızca','türkçe']
+   ============================================================ */
+var WORD_SETS = {
+
+  /* ===================== A1 SETLERİ ===================== */
+
+  a1_salut: { level:'A1', label:'👋 Selamlaşma', pairs:[
+    ['bonjour','günaydın / merhaba'],['bonsoir','iyi akşamlar'],['salut','selam'],
+    ['au revoir','hoşça kal'],['merci','teşekkürler'],['s\'il vous plaît','lütfen'],
+    ['oui','evet'],['non','hayır'],['pardon','affedersiniz'],['désolé','üzgünüm'],
+    ['bonne nuit','iyi geceler'],['à bientôt','yakında görüşürüz'],['enchanté','memnun oldum'],
+    ['bienvenue','hoş geldiniz'],['de rien','rica ederim']
+  ]},
+
+  a1_nombres: { level:'A1', label:'🔢 Sayılar', pairs:[
+    ['un','bir'],['deux','iki'],['trois','üç'],['quatre','dört'],['cinq','beş'],
+    ['six','altı'],['sept','yedi'],['huit','sekiz'],['neuf','dokuz'],['dix','on'],
+    ['vingt','yirmi'],['trente','otuz'],['cent','yüz'],['mille','bin'],['zéro','sıfır']
+  ,['onze','on bir'],['douze','on iki'],['quarante','kırk'],['cinquante','elli'],['soixante','altmış']]},
+
+  a1_couleurs: { level:'A1', label:'🎨 Renkler', pairs:[
+    ['rouge','kırmızı'],['bleu','mavi'],['vert','yeşil'],['jaune','sarı'],
+    ['noir','siyah'],['blanc','beyaz'],['orange','turuncu'],['rose','pembe'],
+    ['gris','gri'],['marron','kahverengi'],['violet','mor'],['beige','bej']
+  ,['doré','altın rengi'],['argenté','gümüş rengi']]},
+
+  a1_famille: { level:'A1', label:'👨‍👩‍👧 Aile', pairs:[
+    ['la mère','anne'],['le père','baba'],['le frère','erkek kardeş'],['la sœur','kız kardeş'],
+    ['le fils','oğul'],['la fille','kız / kız evlat'],['les parents','ebeveynler'],['la famille','aile'],
+    ['le grand-père','dede'],['la grand-mère','babaanne / anneanne'],['l\'enfant','çocuk'],
+    ['le mari','koca'],['la femme','kadın / eş'],['l\'oncle','amca / dayı'],['la tante','hala / teyze']
+  ]},
+
+  a1_corps: { level:'A1', label:'🧍 Vücut', pairs:[
+    ['la tête','baş'],['les yeux','gözler'],['le nez','burun'],['la bouche','ağız'],
+    ['l\'oreille','kulak'],['la main','el'],['le pied','ayak'],['le bras','kol'],
+    ['la jambe','bacak'],['les cheveux','saçlar'],['le ventre','karın'],['le dos','sırt'],
+    ['le cœur','kalp'],['la dent','diş']
+  ,['le doigt','parmak'],['le genou','diz'],['l\'épaule','omuz'],['le visage','yüz']]},
+
+  a1_jours: { level:'A1', label:'📅 Günler & Zaman', pairs:[
+    ['lundi','pazartesi'],['mardi','salı'],['mercredi','çarşamba'],['jeudi','perşembe'],
+    ['vendredi','cuma'],['samedi','cumartesi'],['dimanche','pazar'],['aujourd\'hui','bugün'],
+    ['demain','yarın'],['hier','dün'],['le matin','sabah'],['le soir','akşam'],
+    ['la nuit','gece'],['maintenant','şimdi'],['le jour','gün']
+  ]},
+
+  a1_boissons: { level:'A1', label:'☕ İçecekler', pairs:[
+    ['le café','kahve'],['le thé','çay'],['l\'eau','su'],['le lait','süt'],
+    ['le jus','meyve suyu'],['le vin','şarap'],['la bière','bira'],['le chocolat chaud','sıcak çikolata']
+  ]},
+
+  a1_nourriture: { level:'A1', label:'🥐 Yiyecekler', pairs:[
+    ['le pain','ekmek'],['le fromage','peynir'],['le beurre','tereyağı'],['l\'œuf','yumurta'],
+    ['le croissant','kruvasan'],['la pomme','elma'],['la banane','muz'],['le gâteau','pasta'],
+    ['le sucre','şeker'],['le sel','tuz'],['la viande','et'],['le poisson','balık'],
+    ['le riz','pirinç'],['la soupe','çorba'],['le repas','öğün']
+  ]},
+
+  a1_maison: { level:'A1', label:'🏠 Ev', pairs:[
+    ['la maison','ev'],['la porte','kapı'],['la fenêtre','pencere'],['la table','masa'],
+    ['la chaise','sandalye'],['le lit','yatak'],['la cuisine','mutfak'],['la chambre','oda / yatak odası'],
+    ['la salle de bain','banyo'],['le salon','salon'],['la clé','anahtar'],['le mur','duvar'],
+    ['le sol','zemin'],['le toit','çatı']
+  ]},
+
+  a1_vetements: { level:'A1', label:'👕 Kıyafetler', pairs:[
+    ['le pantalon','pantolon'],['la chemise','gömlek'],['la robe','elbise'],['les chaussures','ayakkabılar'],
+    ['le manteau','palto'],['le chapeau','şapka'],['la jupe','etek'],['le pull','kazak'],
+    ['les chaussettes','çoraplar'],['le sac','çanta'],['la veste','ceket'],['le t-shirt','tişört']
+  ]},
+
+  /* ===================== A2 SETLERİ ===================== */
+
+  a2_legumes: { level:'A2', label:'🥕 Sebze & Meyve', pairs:[
+    ['la tomate','domates'],['la carotte','havuç'],['la pomme de terre','patates'],['l\'oignon','soğan'],
+    ['la salade','salata'],['le champignon','mantar'],['l\'orange','portakal'],['la fraise','çilek'],
+    ['le raisin','üzüm'],['le citron','limon'],['la pêche','şeftali'],['l\'ail','sarımsak'],
+    ['le concombre','salatalık'],['la courgette','kabak']
+  ]},
+
+  a2_animaux: { level:'A2', label:'🐶 Hayvanlar', pairs:[
+    ['le chien','köpek'],['le chat','kedi'],['l\'oiseau','kuş'],['le cheval','at'],
+    ['la vache','inek'],['le poisson','balık'],['le lapin','tavşan'],['la poule','tavuk'],
+    ['le mouton','koyun'],['le cochon','domuz'],['la souris','fare'],['l\'ours','ayı'],
+    ['le lion','aslan'],['le canard','ördek']
+  ,['le tigre','kaplan'],['l\'éléphant','fil'],['le singe','maymun'],['le loup','kurt']]},
+
+  a2_ville: { level:'A2', label:'🏙️ Şehir & Yerler', pairs:[
+    ['la rue','sokak'],['la ville','şehir'],['le magasin','dükkan'],['le marché','pazar'],
+    ['la gare','tren istasyonu'],['l\'hôtel','otel'],['le restaurant','restoran'],['l\'école','okul'],
+    ['l\'hôpital','hastane'],['la banque','banka'],['le parc','park'],['l\'église','kilise'],
+    ['la pharmacie','eczane'],['la poste','postane'],['le musée','müze']
+  ]},
+
+  a2_transport: { level:'A2', label:'🚇 Ulaşım', pairs:[
+    ['la voiture','araba'],['le bus','otobüs'],['le train','tren'],['le métro','metro'],
+    ['l\'avion','uçak'],['le vélo','bisiklet'],['le taxi','taksi'],['le bateau','gemi / tekne'],
+    ['la moto','motosiklet'],['le billet','bilet'],['la route','yol'],['l\'arrêt','durak']
+  ]},
+
+  a2_metiers: { level:'A2', label:'💼 Meslekler', pairs:[
+    ['le médecin','doktor'],['le professeur','öğretmen'],['l\'étudiant','öğrenci'],['le serveur','garson'],
+    ['le boulanger','fırıncı'],['le cuisinier','aşçı'],['le vendeur','satıcı'],['l\'infirmier','hemşire'],
+    ['l\'avocat','avukat'],['le policier','polis'],['l\'artiste','sanatçı'],['l\'ingénieur','mühendis'],
+    ['le chauffeur','şoför'],['le facteur','postacı']
+  ]},
+
+  a2_verbes: { level:'A2', label:'🏃 Fiiller', pairs:[
+    ['être','olmak'],['avoir','sahip olmak'],['aller','gitmek'],['faire','yapmak'],
+    ['manger','yemek yemek'],['boire','içmek'],['parler','konuşmak'],['voir','görmek'],
+    ['venir','gelmek'],['prendre','almak'],['dormir','uyumak'],['acheter','satın almak'],
+    ['donner','vermek'],['vouloir','istemek'],['pouvoir','-ebilmek'],['savoir','bilmek'],
+    ['dire','söylemek'],['écrire','yazmak'],['lire','okumak'],['aimer','sevmek']
+  ,['partir','ayrılmak'],['arriver','varmak'],['chercher','aramak'],['trouver','bulmak'],['attendre','beklemek'],['entendre','duymak']]},
+
+  a2_adjectifs: { level:'A2', label:'✨ Sıfatlar', pairs:[
+    ['grand','büyük'],['petit','küçük'],['bon','iyi'],['mauvais','kötü'],
+    ['beau','güzel'],['nouveau','yeni'],['vieux','eski / yaşlı'],['jeune','genç'],
+    ['chaud','sıcak'],['froid','soğuk'],['facile','kolay'],['difficile','zor'],
+    ['rapide','hızlı'],['lent','yavaş'],['heureux','mutlu'],['triste','üzgün'],
+    ['fort','güçlü'],['cher','pahalı'],['propre','temiz'],['plein','dolu']
+  ,['long','uzun'],['court','kısa'],['large','geniş'],['lourd','ağır'],['léger','hafif'],['sale','kirli']]},
+
+  a2_temps: { level:'A2', label:'🌦️ Hava & Doğa', pairs:[
+    ['le soleil','güneş'],['la pluie','yağmur'],['la neige','kar'],['le vent','rüzgar'],
+    ['le nuage','bulut'],['le ciel','gökyüzü'],['la mer','deniz'],['la montagne','dağ'],
+    ['l\'arbre','ağaç'],['la fleur','çiçek'],['la rivière','nehir'],['la plage','plaj'],
+    ['le froid','soğuk (hava)'],['la chaleur','sıcaklık']
+  ]},
+
+  a2_emotions: { level:'A2', label:'😊 Duygular & Durumlar', pairs:[
+    ['content','memnun'],['fatigué','yorgun'],['malade','hasta'],['en colère','kızgın'],
+    ['surpris','şaşırmış'],['inquiet','endişeli'],['amoureux','aşık'],['ennuyé','sıkılmış'],
+    ['fier','gururlu'],['calme','sakin'],['nerveux','gergin'],['seul','yalnız']
+  ]},
+
+  a2_temps2: { level:'A2', label:'⏰ Zaman İfadeleri', pairs:[
+    ['l\'heure','saat'],['la minute','dakika'],['la semaine','hafta'],['le mois','ay'],
+    ['l\'année','yıl'],['tôt','erken'],['tard','geç'],['toujours','her zaman'],
+    ['souvent','sık sık'],['parfois','bazen'],['jamais','asla'],['bientôt','yakında'],
+    ['déjà','çoktan / zaten'],['encore','hâlâ / yine']
+  ]},
+
+  /* ===================== EK A1 SETLERİ ===================== */
+
+  a1_questions: { level:'A1', label:'❓ Soru Kelimeleri', pairs:[
+    ['qui','kim'],['que','ne'],['quand','ne zaman'],['où','nerede'],
+    ['comment','nasıl'],['pourquoi','neden'],['combien','ne kadar'],['quel','hangi'],
+    ['quoi','ne'],['lequel','hangisi']
+  ]},
+
+  a1_politesse: { level:'A1', label:'🙏 Nezaket İfadeleri', pairs:[
+    ['excusez-moi','affedersiniz'],['s\'il te plaît','lütfen (samimi)'],['merci beaucoup','çok teşekkürler'],
+    ['avec plaisir','memnuniyetle'],['pas de problème','sorun değil'],['bien sûr','tabii ki'],
+    ['d\'accord','tamam / anlaştık'],['peut-être','belki'],['volontiers','seve seve'],['je t\'en prie','rica ederim']
+  ]},
+
+  a1_petitsmots: { level:'A1', label:'🔤 Sık Kelimeler', pairs:[
+    ['et','ve'],['mais','ama'],['ou','veya'],['avec','ile'],['sans','-sız'],
+    ['pour','için'],['dans','içinde'],['sur','üstünde'],['sous','altında'],['très','çok'],
+    ['aussi','de / dahi'],['ici','burada'],['là','orada'],['beaucoup','çok / fazla'],['un peu','biraz']
+  ]},
+
+  /* ===================== EK A2 SETLERİ ===================== */
+
+  a2_maison2: { level:'A2', label:'🛋️ Ev Eşyaları', pairs:[
+    ['le canapé','kanepe'],['le réfrigérateur','buzdolabı'],['le four','fırın'],['l\'armoire','dolap'],
+    ['le miroir','ayna'],['la lampe','lamba'],['le tapis','halı'],['le rideau','perde'],
+    ['l\'évier','lavabo'],['la télévision','televizyon'],['le placard','dolap (rafl ı)'],['l\'escalier','merdiven']
+  ]},
+
+  a2_ecole: { level:'A2', label:'📚 Okul & Ofis', pairs:[
+    ['le livre','kitap'],['le stylo','kalem'],['le crayon','kurşun kalem'],['le cahier','defter'],
+    ['la feuille','kağıt / yaprak'],['le bureau','sıra / ofis'],['l\'ordinateur','bilgisayar'],['le téléphone','telefon'],
+    ['la règle','cetvel'],['la gomme','silgi'],['le sac à dos','sırt çantası'],['la classe','sınıf'],
+    ['le devoir','ödev'],['l\'examen','sınav']
+  ]},
+
+  a2_courses: { level:'A2', label:'🛒 Alışveriş', pairs:[
+    ['l\'argent','para'],['le prix','fiyat'],['cher','pahalı'],['bon marché','ucuz'],
+    ['la monnaie','bozuk para'],['le portefeuille','cüzdan'],['la carte','kart'],['payer','ödemek'],
+    ['acheter','satın almak'],['vendre','satmak'],['l\'addition','hesap'],['la caisse','kasa'],
+    ['le client','müşteri'],['gratuit','ücretsiz']
+  ]},
+
+  a2_voyage: { level:'A2', label:'✈️ Seyahat', pairs:[
+    ['le voyage','yolculuk'],['la valise','valiz'],['le passeport','pasaport'],['la carte','harita'],
+    ['l\'hôtel','otel'],['la chambre','oda'],['la réservation','rezervasyon'],['les vacances','tatil'],
+    ['la plage','plaj'],['le tourisme','turizm'],['la frontière','sınır'],['le départ','kalkış'],
+    ['l\'arrivée','varış'],['le guide','rehber']
+  ]}
+
+
+};
+
+</script>
 
 <script>
 /* ============ AVATAR LOGIC ============ */
@@ -350,7 +640,11 @@ $('hatOpt').addEventListener('click',e=>{ if(!e.target.dataset.h)return;
 $('nameInput').addEventListener('input',()=>{ $('nameDisplay').textContent=$('nameInput').value?`« ${$('nameInput').value} »`:''; try{ localStorage.setItem('vef_username', $('nameInput').value||'voyageur'); }catch(e){} });
 
 /* ============ SCENE NAVIGATION ============ */
-function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0);
+  // para barı: avatar ekranı hariç her yerde görünür
+  var mb=document.getElementById('moneyBar');
+  if(id==='avatarScreen'){ mb.classList.add('hidden'); } else { mb.classList.remove('hidden'); renderWallet(); }
+}
 
 /* avatar "go" button -> hotel */
 $('go').addEventListener('click',function(){ show('hotelScreen'); });
@@ -371,6 +665,7 @@ $('zPencere').addEventListener('click',function(){openHotel('pencere');});
 $('zTelefon').addEventListener('click',function(){openHotel('telefon');});
 $('zValiz').addEventListener('click',function(){ $('go').textContent='✓ Retour à la chambre'; show('avatarScreen'); });
 $('zKapi').addEventListener('click',function(){show('streetScreen');});
+$('zJouer').addEventListener('click',function(){ openGame(); });
 document.getElementById('ovHotel').addEventListener('click',function(e){ if(e.target.id==='ovHotel') document.getElementById('ovHotel').classList.remove('show'); });
 
 /* ---- STREET navigation ---- */
@@ -479,28 +774,53 @@ function buildCafeNodes(){
         { fr:'Salut !', help:'Selam! (samimi)', go:'order' }
       ] },
     serveUsual:{ speaker:'Julien', line:'Parfait ! Je vous prépare ça. ☕', help:'Mükemmel! Hemen hazırlıyorum.',
-      choices:[ { fr:'Merci Julien !', help:'Teşekkürler Julien!', go:'served' } ] },
+      choices:[ { fr:'Merci Julien !', help:'Teşekkürler Julien!', go:'served', order:(cafeMem.lastOrder||'cafe') } ] },
     order:{ speaker:'Julien', line:'Qu\'est-ce que vous voulez boire ? 😊', help:'Ne içmek istersiniz? ("boire" = içmek)',
       choices:[
-        { fr:'Un café, s\'il vous plaît.', help:'Bir kahve, lütfen.', go:'served', order:'cafe' },
-        { fr:'Un café au lait, s\'il vous plaît.', help:'Sütlü kahve, lütfen.', go:'served', order:'aulait' },
-        { fr:'Un thé, s\'il vous plaît.', help:'Bir çay, lütfen.', go:'served', order:'the' }
+        { fr:'Un café, s\'il vous plaît.', help:'Bir kahve, lütfen. (3€)', go:'served', order:'cafe' },
+        { fr:'Un café au lait, s\'il vous plaît.', help:'Sütlü kahve, lütfen. (4€)', go:'served', order:'aulait' },
+        { fr:'Un thé, s\'il vous plaît.', help:'Bir çay, lütfen. (3€)', go:'served', order:'the' }
       ] },
     served:{ speaker:'Julien', line:'Et voilà ! Bonne dégustation. ☕✨', help:'İşte buyurun! Afiyet olsun. ("Bonne dégustation" = afiyet olsun)',
       choices:[
         { fr:'Il fait beau aujourd\'hui, non ?', help:'Bugün hava güzel, değil mi?', go:'weather' },
-        { fr:'Merci, c\'est parfait.', help:'Teşekkürler, mükemmel.', go:'end' }
+        { fr:'L\'addition, s\'il vous plaît.', help:'Hesap, lütfen. (ödemek için)', go:'addition' }
       ] },
     weather:{ speaker:'Julien', line:'Ah oui, un vrai temps de printemps ! 🌸', help:'Ah evet, tam bir ilkbahar havası!',
-      choices:[ { fr:'Merci, au revoir !', help:'Teşekkürler, hoşça kalın!', go:'end' } ] },
+      choices:[ { fr:'L\'addition, s\'il vous plaît.', help:'Hesap, lütfen.', go:'addition' } ] },
+    addition:{ speaker:'Julien', dynamic:'addition', choices:[] },
+    paid:{ speaker:'Julien', line:'Merci beaucoup ! Bonne journée. 😊', help:'Çok teşekkürler! İyi günler. ("Bonne journée" = iyi günler)',
+      choices:[ { fr:'Au revoir !', help:'Hoşça kalın!', go:'end' } ] },
+    noMoney:{ speaker:'Julien', dynamic:'noMoney', choices:[] },
     end:{ speaker:'Julien', line:(cafeMem.visits>=2 ? ('Au revoir '+cafeUser+', à très bientôt ! 👋') : 'Au revoir, et à bientôt ! 👋'),
       help:'Hoşça kalın, çok yakında görüşürüz! ("à très bientôt" = çok yakında görüşürüz)', choices:[], final:true }
   };
 }
 
+/* kahve fiyatları */
+var CAFE_PRICES={ cafe:3, aulait:4, the:3 };
+
 function renderCafe(key){
   var n=cafeNodes[key];
   var dbox=document.getElementById('dbox');
+  // dinamik düğümler: hesap ve para yetersiz
+  if(n.dynamic==='addition'){
+    var price=CAFE_PRICES[cafeMem.lastOrder]||3;
+    var have=getWallet();
+    n=JSON.parse(JSON.stringify(n));
+    n.line='Bien sûr ! Ça fait '+price+' euros. 💶';
+    n.help='Tabii ki! '+price+' euro ediyor. — Cüzdanında '+have+'€ var.';
+    if(have>=price){
+      n.choices=[ { fr:'Voilà, '+price+' euros.', help:'Buyurun, '+price+' euro. (öde)', go:'__pay', payAmount:price } ];
+    } else {
+      n.choices=[ { fr:'Oh, je n\'ai pas assez… 😟', help:'Ah, yeterli param yok… (oyun oynayıp kazanabilirsin)', go:'noMoney' } ];
+    }
+  } else if(n.dynamic==='noMoney'){
+    n=JSON.parse(JSON.stringify(n));
+    n.line='Pas de souci, ce sera pour la prochaine fois ! 😊';
+    n.help='Sorun değil, bir dahaki sefere olsun! — Euro kazanmak için otelde 🎮 Jouer ile kelime oyunu oynayabilirsin.';
+    n.choices=[ { fr:'Merci, au revoir.', help:'Teşekkürler, hoşça kalın.', go:'end' } ];
+  }
   var html='<div class="speaker">💬 '+n.speaker+'</div>';
   html+='<div class="line">'+n.line+'</div>';
   html+='<div class="help-row"><button class="help-btn" onclick="this.nextElementSibling.classList.toggle(\'show\')">? Anlamı</button><div class="help-text">'+n.help+'</div></div>';
@@ -510,7 +830,7 @@ function renderCafe(key){
   } else {
     html+='<div class="choices">';
     n.choices.forEach(function(c){
-      html+='<button class="choice" data-go="'+c.go+'"'+(c.order?(' data-order="'+c.order+'"'):'')+'>'+
+      html+='<button class="choice" data-go="'+c.go+'"'+(c.order?(' data-order="'+c.order+'"'):'')+(c.payAmount?(' data-pay="'+c.payAmount+'"'):'')+'>'+
         '<span class="qmark" onclick="event.stopPropagation(); this.parentElement.classList.toggle(\'reveal\')">?</span>'+
         '<div class="c-fr">'+c.fr+'</div><div class="c-help">'+c.help+'</div></button>';
     });
@@ -520,6 +840,12 @@ function renderCafe(key){
   dbox.querySelectorAll('.choice').forEach(function(b){
     b.addEventListener('click',function(){
       if(b.dataset.order){ cafeMem.lastOrder=b.dataset.order; saveCafeMem(cafeMem); }
+      if(b.dataset.go==='__pay'){
+        var amt=parseInt(b.dataset.pay,10)||0;
+        setWallet(getWallet()-amt); bumpWallet();
+        renderCafe('paid');
+        return;
+      }
       renderCafe(b.dataset.go);
     });
   });
@@ -529,8 +855,103 @@ function renderCafe(key){
   if(cr) cr.addEventListener('click',function(){ renderCafe('start'); });
 }
 
+/* ============ CÜZDAN ============ */
+function getWallet(){ try{ return parseInt(localStorage.getItem('vef_wallet')||'0',10);}catch(e){return 0;} }
+function setWallet(v){ try{ localStorage.setItem('vef_wallet',String(v)); }catch(e){} renderWallet(); }
+function renderWallet(){ var a=document.getElementById('walletAmt'); if(a) a.textContent=getWallet(); }
+function bumpWallet(){ var a=document.getElementById('walletAmt'); if(a){ a.classList.add('bump'); setTimeout(function(){a.classList.remove('bump');},200);} }
+
+/* ============ KELİME OYUNU ============ */
+var G_EARN=2, G_PAIRS=4;
+var gLevel='A1', gSet=null, gRoundPairs=[], gSelFr=null, gMatched=0, gEarned=0;
+function gSetsForLevel(lv){ return Object.keys(WORD_SETS).filter(function(k){ return WORD_SETS[k].level===lv; }); }
+function todayStr(){ var d=new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
+function playedToday(){ try{ return localStorage.getItem('vef_lastplay')===todayStr(); }catch(e){ return false; } }
+function markPlayed(){ try{ localStorage.setItem('vef_lastplay', todayStr()); }catch(e){} }
+
+function openGame(){
+  show('gameScreen');
+  // her şeyi gizle, duruma göre aç
+  document.getElementById('gdone').classList.remove('show');
+  document.getElementById('glimit').classList.remove('show');
+  document.getElementById('levels').style.display='flex';
+  document.getElementById('sets').style.display='flex';
+  document.querySelector('#gameScreen .board-wrap .gboard').style.display='grid';
+  document.getElementById('gprogress').style.display='block';
+  document.getElementById('gameBack').style.display='block';
+  if(playedToday()){
+    // limit ekranı
+    document.getElementById('levels').style.display='none';
+    document.getElementById('sets').style.display='none';
+    document.querySelector('#gameScreen .board-wrap .gboard').style.display='none';
+    document.getElementById('gprogress').style.display='none';
+    document.getElementById('gameBack').style.display='none';
+    document.getElementById('glimit').classList.add('show');
+    return;
+  }
+  gLevel='A1'; gSet=gSetsForLevel('A1')[0];
+  gBuildLevels(); gBuildSets(); gStartRound();
+}
+function gBuildLevels(){
+  var c=document.getElementById('levels'); c.innerHTML='';
+  ['A1','A2'].forEach(function(lv){
+    var b=document.createElement('button'); b.className='lvl-btn'+(lv===gLevel?' active':''); b.textContent='Niveau '+lv;
+    b.addEventListener('click',function(){ gLevel=lv; gSet=gSetsForLevel(lv)[0]; gBuildLevels(); gBuildSets(); gStartRound(); });
+    c.appendChild(b);
+  });
+}
+function gBuildSets(){
+  var c=document.getElementById('sets'); c.innerHTML='';
+  gSetsForLevel(gLevel).forEach(function(k){
+    var b=document.createElement('button'); b.className='set-btn'+(k===gSet?' active':''); b.textContent=WORD_SETS[k].label;
+    b.addEventListener('click',function(){ gSet=k; gBuildSets(); gStartRound(); });
+    c.appendChild(b);
+  });
+}
+function gShuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+function gStartRound(){
+  document.getElementById('gdone').classList.remove('show');
+  var all=WORD_SETS[gSet].pairs;
+  gRoundPairs=gShuffle(all).slice(0,Math.min(G_PAIRS,all.length));
+  gSelFr=null; gMatched=0; gEarned=0;
+  var frL=gShuffle(gRoundPairs.map(function(p,i){return {t:p[0],id:i};}));
+  var trL=gShuffle(gRoundPairs.map(function(p,i){return {t:p[1],id:i};}));
+  var cf=document.getElementById('colFr'),ct=document.getElementById('colTr'); cf.innerHTML='';ct.innerHTML='';
+  frL.forEach(function(o){ var d=document.createElement('div'); d.className='gword fr'; d.textContent=o.t; d.dataset.id=o.id; d.addEventListener('click',function(){gSelFrFn(d);}); cf.appendChild(d); });
+  trL.forEach(function(o){ var d=document.createElement('div'); d.className='gword tr'; d.textContent=o.t; d.dataset.id=o.id; d.addEventListener('click',function(){gSelTrFn(d);}); ct.appendChild(d); });
+  document.getElementById('gprogress').textContent='0 / '+gRoundPairs.length+' eşleşti';
+}
+function gSelFrFn(el){ if(el.classList.contains('matched'))return; document.querySelectorAll('#colFr .gword').forEach(function(w){w.classList.remove('selected');}); el.classList.add('selected'); gSelFr=el; }
+function gSelTrFn(el){
+  if(el.classList.contains('matched'))return;
+  if(!gSelFr){ gToast('Önce Fransızca kelimeyi seç 🇫🇷'); return; }
+  if(el.dataset.id===gSelFr.dataset.id){
+    el.classList.add('matched'); gSelFr.classList.add('matched'); gSelFr.classList.remove('selected'); gSelFr=null;
+    gMatched++; gEarned+=G_EARN; setWallet(getWallet()+G_EARN); bumpWallet();
+    gToast('Bravo ! +'+G_EARN+'€',true);
+    document.getElementById('gprogress').textContent=gMatched+' / '+gRoundPairs.length+' eşleşti';
+    if(gMatched===gRoundPairs.length) gRoundDone();
+  } else {
+    el.classList.add('wrong'); var s=gSelFr;
+    setTimeout(function(){ el.classList.remove('wrong'); if(s)s.classList.remove('selected'); },350);
+    gSelFr=null; gToast('Tekrar dene 🤔');
+  }
+}
+function gRoundDone(){
+  markPlayed(); // günlük hak kullanıldı
+  document.getElementById('earnedTxt').textContent='+'+gEarned+' €';
+  document.getElementById('gdoneSub').textContent='Bugünlük set tamamlandı! Cüzdan: '+getWallet()+'€. Yarın yeni set!';
+  document.getElementById('gdone').classList.add('show');
+}
+var gtt=null;
+function gToast(m,w){ var t=document.getElementById('gtoast'); t.textContent=m; t.className='gtoast show'+(w?' win':''); clearTimeout(gtt); gtt=setTimeout(function(){t.className='gtoast';},1100); }
+document.getElementById('gameBack').addEventListener('click',function(){ show('hotelScreen'); });
+document.getElementById('gameBackWin').addEventListener('click',function(){ show('hotelScreen'); });
+document.getElementById('gameBackLimit').addEventListener('click',function(){ show('hotelScreen'); });
+
 /* init avatar render */
 renderHair(); renderClothing(); renderBrows(); renderMouth();
+renderWallet();
 </script>
 </body>
 </html>
