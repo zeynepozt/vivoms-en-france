@@ -942,19 +942,19 @@ function buildBakeryNodes(){
 function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
 
 function renderBakery(key){
-  var n=bakeryNodes[key];
   var dbox=document.getElementById('dbox');
   // özel akışlar
-  if(key==='__usual'){ bakeryCart=bakeryMem.lastItem; renderBakery('addition'); return; }
-  if(key==='__pick'){ /* handled in click */ }
-  if(n && n.dynamic==='confirm'){
-    var it=BAKERY_ITEMS[bakeryCart];
+  if(key==='__usual'){ bakeryCart=bakeryMem.lastItem||'baguette'; key='addition'; }
+  var n=bakeryNodes[key];
+  if(!n){ return; }
+  if(n.dynamic==='confirm'){
+    var it=BAKERY_ITEMS[bakeryCart]||BAKERY_ITEMS.baguette;
     n=JSON.parse(JSON.stringify(n));
     n.line='Très bon choix ! '+cap(it.fr)+'. 😊';
     n.help='Çok güzel seçim! '+it.tr+'.';
     n.choices=[ { fr:'L\'addition, s\'il vous plaît.', help:'Hesap, lütfen.', go:'addition' } ];
-  } else if(n && n.dynamic==='addition'){
-    var it2=BAKERY_ITEMS[bakeryCart]; var price=it2.price; var have=getWallet();
+  } else if(n.dynamic==='addition'){
+    var it2=BAKERY_ITEMS[bakeryCart]||BAKERY_ITEMS.baguette; var price=it2.price; var have=getWallet();
     n=JSON.parse(JSON.stringify(n));
     n.line='Ça fait '+price+' euro'+(price>1?'s':'')+'. 💶';
     n.help=price+' euro ediyor. — Cüzdanında '+have+'€ var.';
@@ -963,7 +963,7 @@ function renderBakery(key){
     } else {
       n.choices=[ { fr:'Je n\'ai pas assez… 😟', help:'Yeterli param yok… (oyun oynayıp kazan)', go:'noMoney' } ];
     }
-  } else if(n && n.dynamic==='noMoney'){
+  } else if(n.dynamic==='noMoney'){
     n=JSON.parse(JSON.stringify(n));
     n.line='Ce n\'est pas grave, à la prochaine ! 😊';
     n.help='Önemli değil, bir dahaki sefere! — Euro için oyun oynayabilirsin.';
